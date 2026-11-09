@@ -6,8 +6,14 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/M0Probe.unity
-    guid: a7a80f6af404af6fcadf204cc5b4042f
+    path: Assets/Scenes/Boot.unity
+    guid: bbc201580e9a34950b0dc429c5ab88cb
+  - enabled: 1
+    path: Assets/Scenes/Menu.unity
+    guid: 40033bb76cbed96e1be22715591265ba
+  - enabled: 1
+    path: Assets/Scenes/Race.unity
+    guid: 872b2fc9e80046d1fa76fb8f26ac22de
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

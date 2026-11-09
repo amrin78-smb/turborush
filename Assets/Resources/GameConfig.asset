@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f640f427d6a24e6ef8df66037a80d8dc, type: 3}
+  m_Name: GameConfig
+  m_EditorClassIdentifier: TurboRush.Runtime::TurboRush.Core.GameConfig
+  cars:
+  - {fileID: 11400000, guid: f537eecd004324cd3ab5d52ede7708a7, type: 2}
+  - {fileID: 11400000, guid: cb0511483563349788565a2c26e54830, type: 2}
+  - {fileID: 11400000, guid: 4b68cfcf32f658d78a568c95826cc24e, type: 2}
+  - {fileID: 11400000, guid: cd922213ab70c2ba1bc5627a95e394d9, type: 2}
+  - {fileID: 11400000, guid: e883bd8a14da89372bfff4f24e1c532b, type: 2}
+  - {fileID: 11400000, guid: fe224c8ad943a1a32a9570919562f07b, type: 2}
+  - {fileID: 11400000, guid: 2466dd8f0d704972289084a83d4a5930, type: 2}
+  - {fileID: 11400000, guid: b669bb36323ce695dba246790486ea48, type: 2}
+  tracks:
+  - {fileID: 11400000, guid: 5ea15eefe3efcbb9cbc0e321d7c1092f, type: 2}
+  - {fileID: 11400000, guid: 102801dda3a8b3161928e7dc7b842779, type: 2}
+  - {fileID: 11400000, guid: ce54fb2a6dbf2af21a2cf1b80ab5ca54, type: 2}
+  ai: {fileID: 11400000, guid: d41c65ab5df1e9a71885a14132b006c7, type: 2}
+  race:
+    racerCount: 6
+    playerGridSlot: 5
+    gridRowSpacing: 9
+    gridLaneOffset: 2.6
+    countdownSeconds: 3
+    finishingSeconds: 3
+    cornerDrift: 0.05
+    lowSpeedSteerScale: 0.55
+    deceleration: 9
+    carLength: 4.3
+    carWidth: 2
+    shoulderSpeedFactor: 0.72
+    runoffSpeedFactor: 0.45
+    barrierSpeedKeep: 0.9
+    barrierBounce: 0.35
+    recoveryDelay: 3
+    stuckDelay: 4
+    stuckSpeed: 3
+    respawnSpeedFactor: 0.45
+    respawnGhostSeconds: 2
+    respawnLaneFraction: 0.25
+    bumpSpeedKeep: 0.94
+    bumpLateralKick: 2.5
+  audio: {fileID: 11400000, guid: 42e7f0bcb8a04122080b047909997003, type: 2}
+  ui: {fileID: 11400000, guid: 91cd67ea7675664baa84f3e16acf2691, type: 2}
+  materials:
+    vertexLit: {fileID: 2100000, guid: 25e1bbc940070b653ba24525645a91f1, type: 2}
+    road: {fileID: 2100000, guid: af00ce9bf18c95c2bab5b5cd5f377dec, type: 2}
+    water: {fileID: 2100000, guid: cbea18f7e2c4cc95f848f6a61b857a6b, type: 2}
+    sky: {fileID: 2100000, guid: 0948807c354597717bd60029c74cad60, type: 2}
+    blobShadow: {fileID: 2100000, guid: 2cf27460209d3e5af9533e91ef2ab915, type: 2}
+    carBase: {fileID: 2100000, guid: 7ed757f12a4a7c48b818823ddfd7a514, type: 2}
+  camera:
+    distance: 8.5
+    height: 3.4
+    lookAhead: 14
+    lookHeight: 1.2
+    positionDamping: 0.12
+    rotationSharpness: 8
+    fov: 60
+    speedFov: 6
+    lateralFollow: 0.75
+    bankFollow: 0.25

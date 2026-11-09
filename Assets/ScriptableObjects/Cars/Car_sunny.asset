@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 622c11c8bbd2ee6949bc7dd3fa2cf4e2, type: 3}
+  m_Name: Car_sunny
+  m_EditorClassIdentifier: TurboRush.Runtime::TurboRush.Vehicle.CarDefinition
+  id: sunny
+  displayName: Sunny
+  bodyStyle: 2
+  paint: {r: 1, g: 0.8, b: 0.08, a: 1}
+  accent: {r: 0.12, g: 0.12, b: 0.15, a: 1}
+  unlockStars: 2
+  prefab: {fileID: 6352018553776673316, guid: 32fdc488071a591aca04e58e75f80130, type: 3}
+  portrait: {fileID: 0}
+  tuning:
+    maxSpeedKmh: 150
+    acceleration: 11
+    lateralSpeed: 10
+    steerRate: 4.5
+    returnRate: 6
+    lateralAccel: 38

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d601e8e6b7a30fe138d74533bd307d10, type: 3}
+  m_Name: AudioLibrary
+  m_EditorClassIdentifier: TurboRush.Runtime::TurboRush.Audio.AudioLibrary
+  menuMusic: {fileID: 8300000, guid: d1f1c8fd5a94c687eb89395a2b24e725, type: 3}
+  raceMusic: {fileID: 8300000, guid: d2d933a23c51030b39b98a8885c8c8c6, type: 3}
+  engineLoop: {fileID: 8300000, guid: 69f93daa9e7d88ca3844e2b3f0b8c7f4, type: 3}
+  offroadLoop: {fileID: 8300000, guid: 9a424edcd6c2467e894fd64c8267f6ba, type: 3}
+  sfx:
+  - {fileID: 8300000, guid: 7916ac2808a38a32daa993235b06789b, type: 3}
+  - {fileID: 8300000, guid: 15321541574a8580992a2322e090ccac, type: 3}
+  - {fileID: 8300000, guid: 9365f8714c80784e9a862e9b1c3f608c, type: 3}
+  - {fileID: 8300000, guid: 557a66dfb6419e4518a7af18aa55632b, type: 3}
+  - {fileID: 8300000, guid: fa5bd3a6115ac2cb881b6f2a0b12a51d, type: 3}
+  - {fileID: 8300000, guid: d2af25b24aec8a58bafcbcc7e9877f67, type: 3}
+  - {fileID: 8300000, guid: 40f7bafa5f85f51c2978136f01d91783, type: 3}
+  - {fileID: 8300000, guid: 3235d2a08156edd51a07d4369d160716, type: 3}
+  - {fileID: 8300000, guid: 946ad19737d403d2d901216311d179bf, type: 3}
+  - {fileID: 8300000, guid: b1f5230ade4f629e8b4503ca84279ed4, type: 3}
+  - {fileID: 8300000, guid: e0a295a8d8912fc02bba6c5664877e92, type: 3}
+  - {fileID: 8300000, guid: 84b79e687de36bf02a03aa93998c592c, type: 3}
+  raceMusicVolume: 0.35
+  engineVolume: 0.45

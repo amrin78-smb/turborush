@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 179407200ce4cb2639a4c61d0557c05c, type: 3}
+  m_Name: UISkin
+  m_EditorClassIdentifier: TurboRush.Runtime::TurboRush.UI.UISkin
+  font: {fileID: 11400000, guid: 6015b6cf98b3b79f780376fb337fe7c4, type: 2}
+  fontOutline: {fileID: 2100000, guid: 67d4975e1064f86ed953b42bfb3d667a, type: 2}
+  rounded: {fileID: 21300000, guid: fe10869d4db3851bba8e7871951b0775, type: 3}
+  circle: {fileID: 21300000, guid: 0700089dacfa9cb8e88844ffc4e210bb, type: 3}
+  softCircle: {fileID: 21300000, guid: a014adfd27f4d356da1ffbe6b524178a, type: 3}
+  gradient: {fileID: 21300000, guid: 32eb97aebcac2a60e911d4d159d4c029, type: 3}
+  logo: {fileID: 0}
+  icons:
+  - {fileID: 21300000, guid: 695823ed3dca26376af754519d7f244f, type: 3}
+  - {fileID: 21300000, guid: 19a8e40e371e3de8db627770c63fbc82, type: 3}
+  - {fileID: 21300000, guid: f2cc1db2f0fc7297697b696dcca63494, type: 3}
+  - {fileID: 21300000, guid: db1358b32aae9eb268bca56f3aefd38f, type: 3}
+  - {fileID: 21300000, guid: d24c34fa6fd113269958f0154526db80, type: 3}
+  - {fileID: 21300000, guid: e07a8ca938272186abd42e1769ff5ba1, type: 3}
+  - {fileID: 21300000, guid: e4540d845900083eabfb332213aca0eb, type: 3}
+  - {fileID: 21300000, guid: c020d62a60cca92e49330dbb0b70f5fb, type: 3}
+  - {fileID: 21300000, guid: 05859478ad540777493e4ded1fc6428b, type: 3}
+  - {fileID: 21300000, guid: 795b6ee72c9d7f6c58090a1fff07dd67, type: 3}
+  - {fileID: 21300000, guid: 4117f8cb3398959bd91474e9665bb95a, type: 3}
+  - {fileID: 21300000, guid: 3506f13ca941ed39d8162a344638420e, type: 3}
+  - {fileID: 21300000, guid: 42cfef63dc43527b3be256f9b1603913, type: 3}
+  - {fileID: 21300000, guid: 41fc72ff5aba6b5c08ca8ac7e671940f, type: 3}
+  - {fileID: 21300000, guid: bac64b11d6cba587eaad80403dfc42c2, type: 3}
+  - {fileID: 21300000, guid: 0353304bdfc625facb304b0a12f9b221, type: 3}
+  - {fileID: 21300000, guid: b3a5c8051a80b5c8dbcc8d5eb09f9d93, type: 3}
+  - {fileID: 21300000, guid: d9f668e05cd554dcf81169cdece96c1d, type: 3}
+  - {fileID: 21300000, guid: cca35d9eef8ea8fb7bddad57b96d8c3a, type: 3}
+  - {fileID: 21300000, guid: 1f6c4aeef3ad12bebbdc6330ba0cbd59, type: 3}
+  - {fileID: 21300000, guid: 23ca6197ead677527a9ea7bdbe17e1fb, type: 3}
+  - {fileID: 21300000, guid: d950158ccd0e92c0597a571527bc1c27, type: 3}
+  primary: {r: 1, g: 0.42, b: 0.1, a: 1}
+  secondary: {r: 0.12, g: 0.55, b: 0.98, a: 1}
+  accent: {r: 1, g: 0.8, b: 0.1, a: 1}
+  good: {r: 0.25, g: 0.78, b: 0.35, a: 1}
+  panel: {r: 0.07, g: 0.12, b: 0.28, a: 0.82}
+  panelLight: {r: 1, g: 1, b: 1, a: 0.95}
+  text: {r: 1, g: 1, b: 1, a: 1}
+  textDark: {r: 0.1, g: 0.13, b: 0.25, a: 1}
+  locked: {r: 0.45, g: 0.5, b: 0.6, a: 1}

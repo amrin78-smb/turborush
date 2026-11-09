@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf93ea81642dea03f93d27d6d90f845d, type: 3}
+  m_Name: AIProfile
+  m_EditorClassIdentifier: TurboRush.Runtime::TurboRush.AI.AIProfile
+  skill:
+  - 0.93
+  - 0.91
+  - 0.95
+  - 0.89
+  - 0.92
+  - 0.9
+  - 0.94
+  speedVariation: 0.03
+  variationPeriod: 9
+  lanes:
+  - -0.62
+  - -0.22
+  - 0.22
+  - 0.62
+  lookAhead: 20
+  laneChangeCooldown: 2.2
+  steerGain: 0.55
+  steerDamping: 0.12
+  rubberBand: 1
+  maxSlowdown: 0.06
+  maxBoost: 0.04
+  fullEffectGap: 180

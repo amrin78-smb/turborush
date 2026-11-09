@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 622c11c8bbd2ee6949bc7dd3fa2cf4e2, type: 3}
+  m_Name: Car_grape
+  m_EditorClassIdentifier: TurboRush.Runtime::TurboRush.Vehicle.CarDefinition
+  id: grape
+  displayName: Grape
+  bodyStyle: 1
+  paint: {r: 0.56, g: 0.3, b: 0.92, a: 1}
+  accent: {r: 1, g: 0.6, b: 0.9, a: 1}
+  unlockStars: 5
+  prefab: {fileID: 1178701354204437878, guid: c98b3fd3ea563a9a8a33d9cf5e6832d9, type: 3}
+  portrait: {fileID: 0}
+  tuning:
+    maxSpeedKmh: 150
+    acceleration: 11
+    lateralSpeed: 10
+    steerRate: 4.5
+    returnRate: 6
+    lateralAccel: 38
