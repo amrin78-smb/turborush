@@ -1,0 +1,137 @@
+Turbo Rush 3D autopilot  2026-11-09 23:25:03  screen 1920x1080  aspect 1.778  match=1  safe-inset=(0.00, 0.00, 0.00, 0.00)
+PASS menu scene loaded
+PASS state MainMenu
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1080_01_main_menu.png
+PASS state VehicleSelect
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1080_02_garage.png
+PASS state TrackSelect
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1080_03_tracks.png
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1080_04_settings.png
+PASS race scene loaded (Coastal Loop)
+PASS state Countdown
+PASS no progress during countdown
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1080_05_countdown.png
+PASS state Racing after GO
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1080_06_racing.png
+PASS state Paused
+PASS pause freezes clock and progress
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1080_07_pause.png
+PASS resume returns to Racing
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1080_06b_racing.png
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1080_06b_racing.png
+Race wall time 17.6s, sim clock 16.2s, frames 483, avg FPS 27.4, worst frame 44ms (desktop xvfb software GL: NOT representative of phones)
+PASS player finished → Finishing
+PASS finish time recorded (16.23s, place 1, respawns 0)
+PASS state Results
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1080_08_results.png
+AI finished by results screen: 0/5
+PASS restart resets race to countdown
+PASS no duplicate race managers
+PASS results screen removed on restart
+PASS racing again after restart
+PASS back at MainMenu
+PASS single Services instance
+PASS no errors/exceptions logged (0)
+RESULT: PASS
+Turbo Rush 3D autopilot  2026-11-09 23:26:37  screen 1920x1200  aspect 1.600  match=0  safe-inset=(0.00, 0.00, 0.00, 0.00)
+PASS menu scene loaded
+PASS state MainMenu
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1200_01_main_menu.png
+PASS state VehicleSelect
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1200_02_garage.png
+PASS state TrackSelect
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1200_03_tracks.png
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1200_04_settings.png
+PASS race scene loaded (Skyway Circuit)
+PASS state Countdown
+PASS no progress during countdown
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1200_05_countdown.png
+PASS state Racing after GO
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1200_06_racing.png
+PASS state Paused
+PASS pause freezes clock and progress
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1200_07_pause.png
+PASS resume returns to Racing
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1200_06b_racing.png
+Race wall time 17.7s, sim clock 16.3s, frames 373, avg FPS 21.1, worst frame 55ms (desktop xvfb software GL: NOT representative of phones)
+PASS player finished → Finishing
+PASS finish time recorded (16.29s, place 1, respawns 0)
+PASS state Results
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1200_08_results.png
+AI finished by results screen: 0/5
+PASS restart resets race to countdown
+PASS no duplicate race managers
+PASS results screen removed on restart
+PASS racing again after restart
+PASS back at MainMenu
+PASS single Services instance
+PASS no errors/exceptions logged (0)
+RESULT: PASS
+Turbo Rush 3D autopilot  2026-11-09 23:27:18  screen 2048x1536  aspect 1.333  match=0  safe-inset=(0.00, 0.00, 0.00, 0.00)
+PASS menu scene loaded
+PASS state MainMenu
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/2048x1536_01_main_menu.png
+PASS state VehicleSelect
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/2048x1536_02_garage.png
+PASS state TrackSelect
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/2048x1536_03_tracks.png
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/2048x1536_04_settings.png
+PASS race scene loaded (Skyway Circuit)
+PASS state Countdown
+PASS no progress during countdown
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/2048x1536_05_countdown.png
+PASS state Racing after GO
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/2048x1536_06_racing.png
+PASS state Paused
+PASS pause freezes clock and progress
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/2048x1536_07_pause.png
+PASS resume returns to Racing
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/2048x1536_06b_racing.png
+Race wall time 17.7s, sim clock 16.2s, frames 288, avg FPS 16.3, worst frame 85ms (desktop xvfb software GL: NOT representative of phones)
+PASS player finished → Finishing
+PASS finish time recorded (16.15s, place 1, respawns 0)
+PASS state Results
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/2048x1536_08_results.png
+AI finished by results screen: 0/5
+PASS restart resets race to countdown
+PASS no duplicate race managers
+PASS results screen removed on restart
+PASS racing again after restart
+PASS back at MainMenu
+PASS single Services instance
+PASS no errors/exceptions logged (0)
+RESULT: PASS
+Turbo Rush 3D autopilot  2026-11-09 23:25:56  screen 2400x1080  aspect 2.222  match=1  safe-inset=(90.00, 90.00, 45.00, 0.00)
+PASS menu scene loaded
+PASS state MainMenu
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/2400x1080_inset90_01_main_menu.png
+PASS state VehicleSelect
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/2400x1080_inset90_02_garage.png
+PASS state TrackSelect
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/2400x1080_inset90_03_tracks.png
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/2400x1080_inset90_04_settings.png
+PASS race scene loaded (Skyway Circuit)
+PASS state Countdown
+PASS no progress during countdown
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/2400x1080_inset90_05_countdown.png
+PASS state Racing after GO
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/2400x1080_inset90_06_racing.png
+PASS state Paused
+PASS pause freezes clock and progress
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/2400x1080_inset90_07_pause.png
+PASS resume returns to Racing
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/2400x1080_inset90_06b_racing.png
+Race wall time 17.7s, sim clock 16.3s, frames 298, avg FPS 16.8, worst frame 88ms (desktop xvfb software GL: NOT representative of phones)
+PASS player finished → Finishing
+PASS finish time recorded (16.22s, place 1, respawns 0)
+PASS state Results
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/2400x1080_inset90_08_results.png
+AI finished by results screen: 0/5
+PASS restart resets race to countdown
+PASS no duplicate race managers
+PASS results screen removed on restart
+PASS racing again after restart
+PASS back at MainMenu
+PASS single Services instance
+PASS no errors/exceptions logged (0)
+RESULT: PASS

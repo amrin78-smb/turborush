@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Passed" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-09 16:07:36Z" end-time="2026-11-09 16:08:07Z" duration="31.4226037">
+  <test-suite type="TestSuite" id="1012" name="Turbo Rush 3D" fullname="Turbo Rush 3D" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-11-09 16:07:36Z" end-time="2026-11-09 16:08:07Z" duration="31.422604" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1005" name="TurboRush.Tests.PlayMode.dll" fullname="/home/amrin/development/Nocvault/turborush/Library/ScriptAssemblies/TurboRush.Tests.PlayMode.dll" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-11-09 16:07:36Z" end-time="2026-11-09 16:08:07Z" duration="31.413681" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="230644" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1006" name="TurboRush" fullname="TurboRush" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-11-09 16:07:36Z" end-time="2026-11-09 16:08:07Z" duration="31.413147" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1007" name="Tests" fullname="TurboRush.Tests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-11-09 16:07:36Z" end-time="2026-11-09 16:08:07Z" duration="31.412862" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1008" name="PlayMode" fullname="TurboRush.Tests.PlayMode" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-11-09 16:07:36Z" end-time="2026-11-09 16:08:07Z" duration="31.412620" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1001" name="RaceFlowPlayTests" fullname="TurboRush.Tests.PlayMode.RaceFlowPlayTests" classname="TurboRush.Tests.PlayMode.RaceFlowPlayTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-11-09 16:07:36Z" end-time="2026-11-09 16:08:07Z" duration="31.411400" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1002" name="CountdownThenRacingThenPauseResume" fullname="TurboRush.Tests.PlayMode.RaceFlowPlayTests.CountdownThenRacingThenPauseResume" methodname="CountdownThenRacingThenPauseResume" classname="TurboRush.Tests.PlayMode.RaceFlowPlayTests" runstate="Runnable" seed="28803968" result="Passed" start-time="2026-11-09 16:07:36Z" end-time="2026-11-09 16:07:43Z" duration="7.354180" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TR Quality] High (auto: desktop); GPU=llvmpipe (LLVM 20.1.2, 256 bits); API=OpenGLCore; RAM=15801MB
+[TR] Services ready. Save: loaded; stars=0; v0.1.0
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+]]></output>
+              </test-case>
+              <test-case id="1004" name="FinishShowsResultsAndRestartResetsEverything" fullname="TurboRush.Tests.PlayMode.RaceFlowPlayTests.FinishShowsResultsAndRestartResetsEverything" methodname="FinishShowsResultsAndRestartResetsEverything" classname="TurboRush.Tests.PlayMode.RaceFlowPlayTests" runstate="Runnable" seed="1133188575" result="Passed" start-time="2026-11-09 16:07:43Z" end-time="2026-11-09 16:08:01Z" duration="17.940116" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1003" name="HudShowsSimulationValues" fullname="TurboRush.Tests.PlayMode.RaceFlowPlayTests.HudShowsSimulationValues" methodname="HudShowsSimulationValues" classname="TurboRush.Tests.PlayMode.RaceFlowPlayTests" runstate="Runnable" seed="175459695" result="Passed" start-time="2026-11-09 16:08:01Z" end-time="2026-11-09 16:08:07Z" duration="6.104251" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: /home/amrin/.config/unity3d/Nocvault/Turbo Rush 3D/TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

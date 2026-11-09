@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="36" result="Passed" total="36" passed="36" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.2488907">
+  <test-suite type="TestSuite" id="1000" name="Turbo Rush 3D" fullname="Turbo Rush 3D" runstate="Runnable" testcasecount="36" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.248891" total="36" passed="36" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1043" name="TurboRush.Tests.EditMode.dll" fullname="/home/amrin/development/Nocvault/turborush/Library/ScriptAssemblies/TurboRush.Tests.EditMode.dll" runstate="Runnable" testcasecount="36" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.241457" total="36" passed="36" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="228835" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1044" name="TurboRush" fullname="TurboRush" runstate="Runnable" testcasecount="36" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.241033" total="36" passed="36" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1045" name="Tests" fullname="TurboRush.Tests" runstate="Runnable" testcasecount="36" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.240829" total="36" passed="36" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1037" name="MotorTests" fullname="TurboRush.Tests.MotorTests" classname="TurboRush.Tests.MotorTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.050710" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1039" name="AutoAcceleratesSmoothlyToMaxSpeedWithoutInput" fullname="TurboRush.Tests.MotorTests.AutoAcceleratesSmoothlyToMaxSpeedWithoutInput" methodname="AutoAcceleratesSmoothlyToMaxSpeedWithoutInput" classname="TurboRush.Tests.MotorTests" runstate="Runnable" seed="1212355500" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.027895" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1041" name="LateralOffsetStaysWithinBarrierLimits" fullname="TurboRush.Tests.MotorTests.LateralOffsetStaysWithinBarrierLimits" methodname="LateralOffsetStaysWithinBarrierLimits" classname="TurboRush.Tests.MotorTests" runstate="Runnable" seed="234934808" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.004518" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1038" name="ProgressIncreasesWithSpeedTimesDeltaTime" fullname="TurboRush.Tests.MotorTests.ProgressIncreasesWithSpeedTimesDeltaTime" methodname="ProgressIncreasesWithSpeedTimesDeltaTime" classname="TurboRush.Tests.MotorTests" runstate="Runnable" seed="1298498299" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.001139" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1042" name="ShoulderSlowsTheCar" fullname="TurboRush.Tests.MotorTests.ShoulderSlowsTheCar" methodname="ShoulderSlowsTheCar" classname="TurboRush.Tests.MotorTests" runstate="Runnable" seed="477508212" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.002275" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1040" name="SteeringIsBoundedAndReturnsToNeutral" fullname="TurboRush.Tests.MotorTests.SteeringIsBoundedAndReturnsToNeutral" methodname="SteeringIsBoundedAndReturnsToNeutral" classname="TurboRush.Tests.MotorTests" runstate="Runnable" seed="767410800" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.001536" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1022" name="ProgressionTests" fullname="TurboRush.Tests.ProgressionTests" classname="TurboRush.Tests.ProgressionTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.006167" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1024" name="ResultsUnlockContentAndKeepBests" fullname="TurboRush.Tests.ProgressionTests.ResultsUnlockContentAndKeepBests" methodname="ResultsUnlockContentAndKeepBests" classname="TurboRush.Tests.ProgressionTests" runstate="Runnable" seed="1839983812" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.004951" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1023" name="StarsArePredictable" fullname="TurboRush.Tests.ProgressionTests.StarsArePredictable" methodname="StarsArePredictable" classname="TurboRush.Tests.ProgressionTests" runstate="Runnable" seed="1282565401" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.000209" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1001" name="RaceRulesTests" fullname="TurboRush.Tests.RaceRulesTests" classname="TurboRush.Tests.RaceRulesTests" runstate="Runnable" testcasecount="12" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.140917" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1012" name="AIOpponentsCompleteEveryShippedTrack" fullname="TurboRush.Tests.RaceRulesTests.AIOpponentsCompleteEveryShippedTrack" methodname="AIOpponentsCompleteEveryShippedTrack" classname="TurboRush.Tests.RaceRulesTests" runstate="Runnable" seed="1408352761" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.094584" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[TR Test] Skyway Circuit: winner 87.5s, last 111.6s
+[TR Test] Desert Dash: winner 93.9s, last 119.8s
+[TR Test] Coastal Loop: winner 77.2s, last 98.6s
+]]></output>
+            </test-case>
+            <test-case id="1010" name="BarriersOnTheShoulderNeverTriggerRespawn" fullname="TurboRush.Tests.RaceRulesTests.BarriersOnTheShoulderNeverTriggerRespawn" methodname="BarriersOnTheShoulderNeverTriggerRespawn" classname="TurboRush.Tests.RaceRulesTests" runstate="Runnable" seed="1059161793" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.002421" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1011" name="CheckpointsAndLapsAdvance" fullname="TurboRush.Tests.RaceRulesTests.CheckpointsAndLapsAdvance" methodname="CheckpointsAndLapsAdvance" classname="TurboRush.Tests.RaceRulesTests" runstate="Runnable" seed="1879055829" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.001908" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1003" name="FinishedRacersRankByFinishOrderNotDistance" fullname="TurboRush.Tests.RaceRulesTests.FinishedRacersRankByFinishOrderNotDistance" methodname="FinishedRacersRankByFinishOrderNotDistance" classname="TurboRush.Tests.RaceRulesTests" runstate="Runnable" seed="287509690" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.000187" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1004" name="FinishFiresExactlyOncePerRacer" fullname="TurboRush.Tests.RaceRulesTests.FinishFiresExactlyOncePerRacer" methodname="FinishFiresExactlyOncePerRacer" classname="TurboRush.Tests.RaceRulesTests" runstate="Runnable" seed="761660728" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.001926" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1013" name="HumanLikePlayerCanWinWithGoodDriving" fullname="TurboRush.Tests.RaceRulesTests.HumanLikePlayerCanWinWithGoodDriving" methodname="HumanLikePlayerCanWinWithGoodDriving" classname="TurboRush.Tests.RaceRulesTests" runstate="Runnable" seed="1247159997" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.018885" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[TR Test] Tap-steering player on Skyway Circuit: place 1, 80.7s
+]]></output>
+            </test-case>
+            <test-case id="1009" name="InvalidStateIsRecoveredImmediately" fullname="TurboRush.Tests.RaceRulesTests.InvalidStateIsRecoveredImmediately" methodname="InvalidStateIsRecoveredImmediately" classname="TurboRush.Tests.RaceRulesTests" runstate="Runnable" seed="958053770" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.001404" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1005" name="NotSteppingFreezesClockAndProgress" fullname="TurboRush.Tests.RaceRulesTests.NotSteppingFreezesClockAndProgress" methodname="NotSteppingFreezesClockAndProgress" classname="TurboRush.Tests.RaceRulesTests" runstate="Runnable" seed="1125437778" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.002013" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1007" name="PlayerStartsBehindTheLineAndCountdownCannotMoveAnyone" fullname="TurboRush.Tests.RaceRulesTests.PlayerStartsBehindTheLineAndCountdownCannotMoveAnyone" methodname="PlayerStartsBehindTheLineAndCountdownCannotMoveAnyone" classname="TurboRush.Tests.RaceRulesTests" runstate="Runnable" seed="1295132605" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.001074" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1002" name="PositionsSortByProgressWithStableTieBreak" fullname="TurboRush.Tests.RaceRulesTests.PositionsSortByProgressWithStableTieBreak" methodname="PositionsSortByProgressWithStableTieBreak" classname="TurboRush.Tests.RaceRulesTests" runstate="Runnable" seed="1646474317" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.001509" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1008" name="RecoveryRespawnsAtLastCheckpointFacingAlongTrack" fullname="TurboRush.Tests.RaceRulesTests.RecoveryRespawnsAtLastCheckpointFacingAlongTrack" methodname="RecoveryRespawnsAtLastCheckpointFacingAlongTrack" classname="TurboRush.Tests.RaceRulesTests" runstate="Runnable" seed="1714349320" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.002677" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1006" name="ResetRestoresEveryRacerToTheGrid" fullname="TurboRush.Tests.RaceRulesTests.ResetRestoresEveryRacerToTheGrid" methodname="ResetRestoresEveryRacerToTheGrid" classname="TurboRush.Tests.RaceRulesTests" runstate="Runnable" seed="1289737243" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.010221" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1014" name="SaveTests" fullname="TurboRush.Tests.SaveTests" classname="TurboRush.Tests.SaveTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.019342" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1017" name="CorruptSaveRecoversWithDefaultsAndKeepsACopy" fullname="TurboRush.Tests.SaveTests.CorruptSaveRecoversWithDefaultsAndKeepsACopy" methodname="CorruptSaveRecoversWithDefaultsAndKeepsACopy" classname="TurboRush.Tests.SaveTests" runstate="Runnable" seed="1727699649" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.012061" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[TR Save] Save was corrupt; kept a copy at /tmp/tr_save_test_a2e8e1985c53494ab071683537726081/turborush_save.json.corrupt and reset to defaults.
+]]></output>
+            </test-case>
+            <test-case id="1018" name="EmptyAndBinaryGarbageAreTreatedAsCorrupt" fullname="TurboRush.Tests.SaveTests.EmptyAndBinaryGarbageAreTreatedAsCorrupt" methodname="EmptyAndBinaryGarbageAreTreatedAsCorrupt" classname="TurboRush.Tests.SaveTests" runstate="Runnable" seed="1583839448" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.000415" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1020" name="FutureVersionStillLoads" fullname="TurboRush.Tests.SaveTests.FutureVersionStillLoads" methodname="FutureVersionStillLoads" classname="TurboRush.Tests.SaveTests" runstate="Runnable" seed="635848337" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.000991" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[TR Save] Save is from a newer version (99); loading known fields only.
+]]></output>
+            </test-case>
+            <test-case id="1015" name="MissingSaveGivesDefaults" fullname="TurboRush.Tests.SaveTests.MissingSaveGivesDefaults" methodname="MissingSaveGivesDefaults" classname="TurboRush.Tests.SaveTests" runstate="Runnable" seed="695595713" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.000888" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[TR Save] No save found; using defaults.
+]]></output>
+            </test-case>
+            <test-case id="1019" name="OldVersionIsMigrated" fullname="TurboRush.Tests.SaveTests.OldVersionIsMigrated" methodname="OldVersionIsMigrated" classname="TurboRush.Tests.SaveTests" runstate="Runnable" seed="1301933524" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.001031" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[TR Save] Migrated save v1 → v2.
+]]></output>
+            </test-case>
+            <test-case id="1021" name="OutOfRangeValuesAreSanitised" fullname="TurboRush.Tests.SaveTests.OutOfRangeValuesAreSanitised" methodname="OutOfRangeValuesAreSanitised" classname="TurboRush.Tests.SaveTests" runstate="Runnable" seed="161611242" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.000556" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1016" name="RoundTripKeepsProgressAndSettings" fullname="TurboRush.Tests.SaveTests.RoundTripKeepsProgressAndSettings" methodname="RoundTripKeepsProgressAndSettings" classname="TurboRush.Tests.SaveTests" runstate="Runnable" seed="45219125" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.001202" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[TR Save] No save found; using defaults.
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1025" name="SystemsTests" fullname="TurboRush.Tests.SystemsTests" classname="TurboRush.Tests.SystemsTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.004007" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1027" name="CanvasMatchRuleFollowsAspect" fullname="TurboRush.Tests.SystemsTests.CanvasMatchRuleFollowsAspect" methodname="CanvasMatchRuleFollowsAspect" classname="TurboRush.Tests.SystemsTests" runstate="Runnable" seed="477875618" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.000402" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1030" name="RedmiA3ClassDevicesGetLowQuality" fullname="TurboRush.Tests.SystemsTests.RedmiA3ClassDevicesGetLowQuality" methodname="RedmiA3ClassDevicesGetLowQuality" classname="TurboRush.Tests.SystemsTests" runstate="Runnable" seed="1800835604" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.000639" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1028" name="SafeAreaRespectsDeviceAndSimulatedInsets" fullname="TurboRush.Tests.SystemsTests.SafeAreaRespectsDeviceAndSimulatedInsets" methodname="SafeAreaRespectsDeviceAndSimulatedInsets" classname="TurboRush.Tests.SystemsTests" runstate="Runnable" seed="1057080924" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.000523" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1026" name="StateMachineOnlyAllowsLegalTransitions" fullname="TurboRush.Tests.SystemsTests.StateMachineOnlyAllowsLegalTransitions" methodname="StateMachineOnlyAllowsLegalTransitions" classname="TurboRush.Tests.SystemsTests" runstate="Runnable" seed="1823053866" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.000631" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1031" name="TimeAndOrdinalFormatting" fullname="TurboRush.Tests.SystemsTests.TimeAndOrdinalFormatting" methodname="TimeAndOrdinalFormatting" classname="TurboRush.Tests.SystemsTests" runstate="Runnable" seed="977284564" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.000488" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1029" name="TouchHalvesMapToSteering" fullname="TurboRush.Tests.SystemsTests.TouchHalvesMapToSteering" methodname="TouchHalvesMapToSteering" classname="TurboRush.Tests.SystemsTests" runstate="Runnable" seed="1755817716" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.000174" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1032" name="TrackPathTests" fullname="TurboRush.Tests.TrackPathTests" classname="TurboRush.Tests.TrackPathTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.018193" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1034" name="ArcLengthIsUniformSoSpeedIsConsistent" fullname="TurboRush.Tests.TrackPathTests.ArcLengthIsUniformSoSpeedIsConsistent" methodname="ArcLengthIsUniformSoSpeedIsConsistent" classname="TurboRush.Tests.TrackPathTests" runstate="Runnable" seed="504258324" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.004499" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1035" name="LoopClosesSeamlessly" fullname="TurboRush.Tests.TrackPathTests.LoopClosesSeamlessly" methodname="LoopClosesSeamlessly" classname="TurboRush.Tests.TrackPathTests" runstate="Runnable" seed="1001331217" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.001196" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1036" name="RightTurnsBankRightSideLower" fullname="TurboRush.Tests.TrackPathTests.RightTurnsBankRightSideLower" methodname="RightTurnsBankRightSideLower" classname="TurboRush.Tests.TrackPathTests" runstate="Runnable" seed="1796670595" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.001743" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1033" name="SamplerReturnsFinitePositionsAndUnitDirections" fullname="TurboRush.Tests.TrackPathTests.SamplerReturnsFinitePositionsAndUnitDirections" methodname="SamplerReturnsFinitePositionsAndUnitDirections" classname="TurboRush.Tests.TrackPathTests" runstate="Runnable" seed="1510303448" result="Passed" start-time="2026-11-09 16:04:46Z" end-time="2026-11-09 16:04:46Z" duration="0.009815" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: /home/amrin/.config/unity3d/Nocvault/Turbo Rush 3D/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
