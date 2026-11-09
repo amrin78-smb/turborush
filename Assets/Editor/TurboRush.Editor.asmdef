@@ -1,0 +1,15 @@
+{
+    "name": "TurboRush.Editor",
+    "rootNamespace": "TurboRush.EditorTools",
+    "references": [
+        "TurboRush.Runtime",
+        "Unity.InputSystem",
+        "Unity.TextMeshPro",
+        "Unity.RenderPipelines.Universal.Runtime",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.Universal.Editor"
+    ],
+    "includePlatforms": ["Editor"],
+    "excludePlatforms": [],
+    "autoReferenced": true
+}
