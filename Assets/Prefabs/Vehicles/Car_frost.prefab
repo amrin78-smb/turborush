@@ -231,3 +231,4 @@ MonoBehaviour:
   m_BodyRenderer: {fileID: 7832756471278549996}
   m_LeanDegrees: 4.5
   m_PitchDegrees: 1.5
+  m_AirPitchDegrees: 12

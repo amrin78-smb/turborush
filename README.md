@@ -20,10 +20,15 @@ the player **holds the left or right half of the screen to steer**. Offline, no 
 
 ## Content
 - Tracks: **Skyway Circuit** (elevated skyway, first/tutorial), **Desert Dash** (banked turns, rock tunnel, unlock at 2 ★),
-  **Coastal Loop** (island loop, bridge over a channel, sandy runoff, unlock at 4 ★). 2 laps each, about 75–95 s per race.
+  **Coastal Loop** (island loop, bridge over a channel, sandy runoff, unlock at 4 ★), **Hilltop Hops** (rolling hills,
+  windmills, two gentle jumps, unlock at 6 ★). 2 laps each, about 75–95 s per race.
+- Slopes: uphill is a little slower and downhill a little faster (±11 % on a 9 % grade), the same for every car.
+- Jumps: yellow kicker ramps across the asphalt (warning signs 70 m before). At full speed a car flies about 0.65 s (≈ 27 m)
+  and peaks about 1.2 m above the road (measured in the Linux autopilot run); steering is softened in the air, and the landing costs almost no speed. Cars on the shoulder beside a ramp
+  simply drive past it.
 - 8 original stylised cars in three body styles. **Blaze** is owned from the start; the others unlock at 1–9 ★.
   Cars are cosmetic: every car has the same handling, so nothing can be bought or grinded into an advantage.
-- Stars per race: 1st = 3 ★, 2nd–3rd = 2 ★, any finish = 1 ★. The best result per track counts (max 9 ★).
+- Stars per race: 1st = 3 ★, 2nd–3rd = 2 ★, any finish = 1 ★. The best result per track counts (max 12 ★).
 
 ## Project layout
 ```
@@ -47,9 +52,10 @@ Track geometry and scenery are built at load time from each `TrackDefinition`.
 
 ## Adding a track
 1. Create a `TrackDefinition` (Assets ▸ Create ▸ Turbo Rush ▸ Track Definition), or add a method to `TrackDataBuilder`.
-2. Fill in the looping control points (metres), laps, road widths, theme palette, optional tunnels, bridges
-   and open-runoff ranges, scenery counts and unlock stars.
-3. Add it to `GameConfig.tracks`. Run **Validate Project**, which checks lap length and that no corner is tighter than 30 m.
+2. Fill in the looping control points (metres), laps, road widths, theme palette, optional tunnels, bridges,
+   open-runoff ranges and jump ramps, scenery counts and unlock stars.
+3. Add it to `GameConfig.tracks`. Run **Validate Project**, which checks lap length, that no corner is tighter than 30 m,
+   and that every jump sits on straight road from the ramp to 60 m past the lip.
    Then run the EditMode tests. `AIOpponentsCompleteEveryShippedTrack` checks that every racer finishes in 50–130 s.
 
 No race code changes are needed.

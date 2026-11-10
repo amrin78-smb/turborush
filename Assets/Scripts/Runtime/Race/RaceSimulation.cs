@@ -18,8 +18,11 @@ namespace TurboRush.Race
         public readonly int Laps;
         public readonly int CheckpointsPerLap;
         private readonly LapRange[] m_Open;
+        private readonly float[] m_JumpStart;  // lap distance where each ramp begins
+        private readonly float[] m_JumpLength;
+        private readonly float[] m_JumpHeight;
 
-        public RaceTrack(TrackPath path, float halfWidth, float shoulderWidth, float runoffWidth, int laps, int checkpointsPerLap, LapRange[] openRunoff = null)
+        public RaceTrack(TrackPath path, float halfWidth, float shoulderWidth, float runoffWidth, int laps, int checkpointsPerLap, LapRange[] openRunoff = null, JumpRamp[] jumps = null)
         {
             Path = path;
             HalfWidth = halfWidth;
@@ -28,11 +31,40 @@ namespace TurboRush.Race
             Laps = Mathf.Max(1, laps);
             CheckpointsPerLap = Mathf.Max(1, checkpointsPerLap);
             m_Open = openRunoff ?? Array.Empty<LapRange>();
+            jumps = jumps ?? Array.Empty<JumpRamp>();
+            m_JumpStart = new float[jumps.Length];
+            m_JumpLength = new float[jumps.Length];
+            m_JumpHeight = new float[jumps.Length];
+            for (int i = 0; i < jumps.Length; i++)
+            {
+                m_JumpLength[i] = Mathf.Max(1f, jumps[i].length);
+                m_JumpHeight[i] = Mathf.Max(0f, jumps[i].height);
+                m_JumpStart[i] = path.Wrap(jumps[i].lapFraction * path.Length - m_JumpLength[i]);
+            }
         }
 
         public static RaceTrack From(TrackDefinition def, TrackPath path = null)
         {
-            return new RaceTrack(path ?? def.BuildPath(), def.roadHalfWidth, def.shoulderWidth, def.runoffWidth, def.laps, def.checkpointsPerLap, def.openRunoff);
+            return new RaceTrack(path ?? def.BuildPath(), def.roadHalfWidth, def.shoulderWidth, def.runoffWidth, def.laps, def.checkpointsPerLap, def.openRunoff, def.jumps);
+        }
+
+        public int JumpCount => m_JumpStart.Length;
+
+        /// <summary>Lap distance of a ramp's lip.</summary>
+        public float JumpLip(int i) => Path.Wrap(m_JumpStart[i] + m_JumpLength[i]);
+
+        /// <summary>Height of the drivable surface above the road centreline surface (ramps only cover the asphalt).</summary>
+        public float SurfaceHeight(float distance, float lateral)
+        {
+            if (m_JumpStart.Length == 0 || Mathf.Abs(lateral) > HalfWidth) return 0f;
+            float d = Path.Wrap(distance);
+            for (int i = 0; i < m_JumpStart.Length; i++)
+            {
+                float x = d - m_JumpStart[i];
+                if (x < 0f) x += Path.Length;
+                if (x <= m_JumpLength[i]) return JumpRamp.Profile(x / m_JumpLength[i], m_JumpHeight[i]);
+            }
+            return 0f;
         }
 
         public float LapLength => Path.Length;
@@ -70,6 +102,12 @@ namespace TurboRush.Race
         public float LateralVelocity;
         public float Drift;             // corner push applied this step (for visuals)
         public float Speed;             // m/s along the track
+        public float Height;            // metres above the road surface (ramps and jumps)
+        public float VerticalSpeed;     // m/s, positive = rising
+        public bool Airborne;
+        public float AirTime;           // seconds in the air during the current (or last) jump
+        public float LandingImpact;     // > 0 only on the step the car lands (downward speed, m/s)
+        public bool TookOff;            // true only on the step the car leaves a ramp
         public float Steer;             // smoothed steering −1..1
         public SurfaceZone Zone;
 
@@ -126,6 +164,8 @@ namespace TurboRush.Race
         public event Action<int> Respawned;                  // racer index
         public event Action<float> PlayerHitBarrier;         // impact speed
         public event Action<int> PlayerBumped;               // other racer index
+        public event Action PlayerTookOff;
+        public event Action<float> PlayerLanded;             // air time in seconds
 
         private float m_PlayerBumpCooldown;
         private float m_PlayerBarrierCooldown;
@@ -175,6 +215,7 @@ namespace TurboRush.Race
                 r.Drift = 0f;
                 r.Speed = 0f;
                 r.Steer = 0f;
+                ClearVertical(r);
                 r.Zone = SurfaceZone.Road;
                 r.Finished = false;
                 r.FinishTime = 0f;
@@ -204,11 +245,21 @@ namespace TurboRush.Race
 
         public float Progress(int racer) => Mathf.Clamp01(Racers[racer].Distance / Track.RaceDistance);
 
-        /// <summary>Advances the race by dt seconds. playerSteer is −1 (left) .. 1 (right).</summary>
+        /// <summary>Longest simulation sub-step. Slow frames are split so jumps and contacts behave the same at any frame rate.</summary>
+        public const float MaxSubStep = 1f / 60f;
+
+        /// <summary>Advances the race by dt seconds (clamped to 0.1 s, split into ≤ 1/60 s sub-steps). playerSteer is −1 (left) .. 1 (right).</summary>
         public void Step(float dt, float playerSteer)
         {
             if (dt <= 0f) return;
             dt = Mathf.Min(dt, 0.1f);
+            int n = Mathf.CeilToInt(dt / MaxSubStep - 1e-4f);
+            float h = dt / Mathf.Max(1, n);
+            for (int i = 0; i < n; i++) SubStep(h, playerSteer);
+        }
+
+        private void SubStep(float dt, float playerSteer)
+        {
             Clock += dt;
             m_PlayerBumpCooldown -= dt;
             m_PlayerBarrierCooldown -= dt;
@@ -226,6 +277,11 @@ namespace TurboRush.Race
                 {
                     m_PlayerBarrierCooldown = 0.6f;
                     PlayerHitBarrier?.Invoke(impact);
+                }
+                if (r.IsPlayer)
+                {
+                    if (r.TookOff) PlayerTookOff?.Invoke();
+                    if (r.LandingImpact > 0f) PlayerLanded?.Invoke(r.AirTime);
                 }
                 UpdateRecovery(r, dt);
             }
@@ -327,8 +383,9 @@ namespace TurboRush.Race
             r.GhostTimer = Mathf.Max(0f, r.GhostTimer - dt);
             r.LaneCooldown -= dt;
             r.OutsideTimer = r.Zone == SurfaceZone.Runoff ? r.OutsideTimer + dt : 0f;
-            r.StuckTimer = r.Speed < Tuning.stuckSpeed ? r.StuckTimer + dt : 0f;
-            bool invalid = float.IsNaN(r.Distance) || float.IsInfinity(r.Distance) || float.IsNaN(r.Lateral) || float.IsInfinity(r.Lateral);
+            r.StuckTimer = r.Speed < Tuning.stuckSpeed && !r.Airborne ? r.StuckTimer + dt : 0f;
+            bool invalid = float.IsNaN(r.Distance) || float.IsInfinity(r.Distance) || float.IsNaN(r.Lateral) || float.IsInfinity(r.Lateral)
+                           || float.IsNaN(r.Height) || float.IsInfinity(r.Height) || r.Height > 30f;
             if (invalid || r.OutsideTimer > Tuning.recoveryDelay || r.StuckTimer > Tuning.stuckDelay) Respawn(r);
         }
 
@@ -354,6 +411,7 @@ namespace TurboRush.Race
             r.LateralVelocity = 0f;
             r.Drift = 0f;
             r.Steer = 0f;
+            ClearVertical(r);
             r.Speed = r.Tuning.MaxSpeed * Tuning.respawnSpeedFactor;
             r.Zone = SurfaceZone.Road;
             r.OutsideTimer = 0f;
@@ -362,6 +420,16 @@ namespace TurboRush.Race
             r.RespawnCount++;
             if (!r.IsPlayer) r.LaneIndex = NearestLane(r.Lateral);
             Respawned?.Invoke(r.Index);
+        }
+
+        private static void ClearVertical(RacerState r)
+        {
+            r.Height = 0f;
+            r.VerticalSpeed = 0f;
+            r.Airborne = false;
+            r.AirTime = 0f;
+            r.LandingImpact = 0f;
+            r.TookOff = false;
         }
 
         private void ResolveContacts()
@@ -378,6 +446,7 @@ namespace TurboRush.Race
                     float dd = Track.Path.DeltaOnLoop(a.Distance, b.Distance); // > 0: a ahead
                     float dl = a.Lateral - b.Lateral;
                     if (Mathf.Abs(dd) >= len || Mathf.Abs(dl) >= wid) continue;
+                    if (Mathf.Abs(a.Height - b.Height) > Tuning.contactHeight) continue; // one car is flying over the other
 
                     RacerState front = dd >= 0f ? a : b;
                     RacerState rear = dd >= 0f ? b : a;
@@ -481,7 +550,7 @@ namespace TurboRush.Race
         public void GetPose(RacerState r, out Vector3 position, out Quaternion rotation)
         {
             Track.Path.Sample(r.Distance, out TrackSample s);
-            position = s.position + s.right * r.Lateral;
+            position = s.position + s.right * r.Lateral + s.up * r.Height;
             float yaw = Mathf.Atan2(r.LateralVelocity + r.Drift, Mathf.Max(r.Speed, 4f)) * Mathf.Rad2Deg;
             rotation = Quaternion.LookRotation(s.forward, s.up) * Quaternion.Euler(0f, Mathf.Clamp(yaw, -25f, 25f), 0f);
         }
@@ -492,6 +561,7 @@ namespace TurboRush.Race
             RacerState r = Racers[racer];
             r.Distance = distance;
             r.Lateral = lateral;
+            ClearVertical(r);
             r.CheckpointCount = Mathf.Clamp(Mathf.FloorToInt(Mathf.Max(0f, distance) / Track.CheckpointSpacing), 0, Track.Laps * Track.CheckpointsPerLap);
             r.CheckpointDistance = distance >= 0f ? r.CheckpointCount * Track.CheckpointSpacing : r.StartDistance;
             r.Lap = Mathf.Clamp(Mathf.FloorToInt(Mathf.Max(0f, distance) / Track.LapLength) + 1, 1, Track.Laps);
@@ -517,8 +587,10 @@ namespace TurboRush.Race
             float maxV = Mathf.Max(1f, t.MaxSpeed);
             float speedFrac = Mathf.Clamp01(r.Speed / maxV);
             float latMax = t.lateralSpeed * Mathf.Lerp(tun.lowSpeedSteerScale, 1f, speedFrac) * (r.Autopilot ? 1f : r.SteerScale);
-            r.LateralVelocity = Mathf.MoveTowards(r.LateralVelocity, r.Steer * latMax, t.lateralAccel * dt);
-            r.Drift = -s.curvature * r.Speed * r.Speed * tun.cornerDrift;
+            // In the air the tyres have no grip: steering is softened and there is no corner push.
+            float grip = r.Airborne ? tun.airSteerControl : 1f;
+            r.LateralVelocity = Mathf.MoveTowards(r.LateralVelocity, r.Steer * latMax, t.lateralAccel * grip * dt);
+            r.Drift = r.Airborne ? 0f : -s.curvature * r.Speed * r.Speed * tun.cornerDrift;
             r.Lateral += (r.LateralVelocity + r.Drift) * dt;
 
             // Barrier / recovery-area limit.
@@ -539,17 +611,61 @@ namespace TurboRush.Race
             }
 
             r.Zone = track.ZoneAt(r.Lateral);
-            float zoneFactor = r.Zone == SurfaceZone.Road ? 1f : r.Zone == SurfaceZone.Shoulder ? tun.shoulderSpeedFactor : tun.runoffSpeedFactor;
-            float target = Mathf.Max(0f, targetSpeed * zoneFactor);
-            if (r.Speed < target)
+            if (!r.Airborne) // in the air the car simply carries its speed
             {
-                float a = t.acceleration * Mathf.Lerp(1f, 0.3f, Mathf.Clamp01(r.Speed / Mathf.Max(1f, target)));
-                r.Speed = Mathf.Min(target, r.Speed + a * dt);
+                float zoneFactor = r.Zone == SurfaceZone.Road ? 1f : r.Zone == SurfaceZone.Shoulder ? tun.shoulderSpeedFactor : tun.runoffSpeedFactor;
+                // Slopes: a little slower uphill, a little faster downhill (the same for every car).
+                float slope = Mathf.Clamp(s.forward.y, -0.2f, 0.2f);
+                float target = Mathf.Max(0f, targetSpeed * zoneFactor * (1f - slope * tun.slopeSpeedEffect));
+                if (r.Speed < target)
+                {
+                    float a = t.acceleration * Mathf.Lerp(1f, 0.3f, Mathf.Clamp01(r.Speed / Mathf.Max(1f, target)));
+                    r.Speed = Mathf.Min(target, r.Speed + a * dt);
+                }
+                else r.Speed = Mathf.Max(target, r.Speed - tun.deceleration * dt);
             }
-            else r.Speed = Mathf.Max(target, r.Speed - tun.deceleration * dt);
 
             r.Distance += r.Speed * dt;
+            Vertical(r, track, tun, dt);
             return hit;
+        }
+
+        /// <summary>
+        /// Height above the road: the car rides up ramps, and when the surface drops away faster than it can follow
+        /// (the lip of a ramp) it flies a ballistic arc under <see cref="RaceTuning.jumpGravity"/> until it lands.
+        /// </summary>
+        public static void Vertical(RacerState r, RaceTrack track, RaceTuning tun, float dt)
+        {
+            r.TookOff = false;
+            r.LandingImpact = 0f;
+            float ground = track.SurfaceHeight(r.Distance, r.Lateral);
+            if (r.Airborne)
+            {
+                r.AirTime += dt;
+                r.VerticalSpeed -= tun.jumpGravity * dt;
+                r.Height += r.VerticalSpeed * dt;
+                if (r.Height <= ground)
+                {
+                    r.LandingImpact = Mathf.Max(0.01f, -r.VerticalSpeed);
+                    r.Height = ground;
+                    r.VerticalSpeed = 0f;
+                    r.Airborne = false;
+                    r.Speed *= tun.landingSpeedKeep;
+                }
+                return;
+            }
+            if (ground < r.Height - tun.takeoffDrop && r.Height > 0.05f)
+            {
+                // The surface fell away under us: launch with the vertical speed we had on the ramp.
+                r.Airborne = true;
+                r.TookOff = true;
+                r.AirTime = 0f;
+                r.VerticalSpeed = Mathf.Max(0f, r.VerticalSpeed) - tun.jumpGravity * dt;
+                r.Height += r.VerticalSpeed * dt;
+                return;
+            }
+            r.VerticalSpeed = dt > 0f ? (ground - r.Height) / dt : 0f;
+            r.Height = ground;
         }
     }
 }

@@ -49,6 +49,20 @@ namespace TurboRush.Race
         [Tooltip("Lateral offset (fraction of road half-width) the car is placed at on respawn.")]
         public float respawnLaneFraction = 0.25f;
 
+        [Header("Slopes and jumps")]
+        [Tooltip("Target speed change per unit of road grade: uphill slower, downhill faster (1.2 → ±11 % on a 9 % grade).")]
+        public float slopeSpeedEffect = 1.2f;
+        [Tooltip("Gravity while airborne (m/s²). A bit above real gravity keeps jumps short and floaty-but-snappy.")]
+        public float jumpGravity = 14f;
+        [Tooltip("Steering authority while airborne (fraction of normal lateral acceleration).")]
+        public float airSteerControl = 0.35f;
+        [Tooltip("Speed kept when landing.")]
+        public float landingSpeedKeep = 0.985f;
+        [Tooltip("The car takes off when the surface drops away by more than this in one step (metres).")]
+        public float takeoffDrop = 0.05f;
+        [Tooltip("Cars more than this far apart vertically do not collide (one is flying over the other).")]
+        public float contactHeight = 0.9f;
+
         [Header("Collisions")]
         [Tooltip("Speed the rear car keeps relative to the front car after a bump.")]
         public float bumpSpeedKeep = 0.94f;

@@ -50,3 +50,18 @@ Screenshots: `Docs/screenshots/` (contact sheet: `layout_contact_sheet.png`).
 ## Redmi A3 physical device
 **Pending physical-device validation.** No device was attached to the build machine.
 Second-launch regression, FPS, thermals, selected graphics API: follow `Docs/REDMI_A3_TEST_CHECKLIST.md` and record the results here.
+
+## 0.2.0 (versionCode 2), M9: release APK, 2026-11-10
+Built with `Tools/build_android.sh release` (incremental IL2CPP, 4 min 37 s). Evidence: `Docs/validation/RC_0.2.0_release_apk.txt`.
+
+| Check | Result |
+|---|---|
+| `aapt dump badging … \| grep native-code` | `native-code: 'arm64-v8a' 'armeabi-v7a'` **PASS** |
+| PowerVR filter `.*PowerVR.*` in `assets/bin/Data/` | found in `globalgamemanagers.assets.split5` **PASS** |
+| Package / version | `com.studio.turborush3d`, versionName 0.2.0, versionCode 2, min SDK 25, target 36 |
+| Orientation | `screenOrientation 0xb` (landscape) **PASS** |
+| Permissions | VIBRATE only, no INTERNET **PASS** |
+| Size / SHA-256 | 53,181,709 bytes (50.7 MB) · `2a172b7a100d7c61434bbb8923930573efb2325b7e52302d0a65ed4416fca62f` |
+| EditMode / PlayMode tests | 46/46 and 3/3 passed |
+| Linux autopilot | Hilltop Hops full race at 1920×1080 PASS (4 take-offs, 4 landings, longest air 0.67 s, max height 1.17 m); fast runs at 2048×1536, 2400×1080 + 90 px inset and 1920×1200 PASS (`Docs/validation/autopilot_reports_m9.txt`) |
+| Redmi A3 install, relaunch regression, FPS | **Pending physical-device validation** |

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace TurboRush.Audio
 {
-    public enum Sfx { Click, Countdown, Go, Checkpoint, Lap, Overtake, Finish, Bump, Barrier, Unlock, Star, Back }
+    public enum Sfx { Click, Countdown, Go, Checkpoint, Lap, Overtake, Finish, Bump, Barrier, Unlock, Star, Back, Jump, Land }
 
     /// <summary>
     /// Persistent audio: music, UI/race one-shots, engine loop (pitch/volume follow speed) and off-road rumble.

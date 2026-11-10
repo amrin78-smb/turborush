@@ -5,7 +5,7 @@ using UnityEngine;
 namespace TurboRush.EditorTools
 {
     /// <summary>
-    /// The three original track layouts (control points + theme). This is the track-authoring entry point: add a new
+    /// The four original track layouts (control points + theme). This is the track-authoring entry point: add a new
     /// method here (or create a TrackDefinition asset by hand) and list it in GameConfig — no race code changes.
     /// </summary>
     public static class TrackDataBuilder
@@ -14,7 +14,7 @@ namespace TurboRush.EditorTools
 
         public static TrackDefinition[] BuildAll()
         {
-            var defs = new[] { Skyway(), Desert(), Coastal() };
+            var defs = new[] { Skyway(), Desert(), Coastal(), Hills() };
             foreach (TrackDefinition d in defs)
             {
                 d.preview = Preview(d);
@@ -171,6 +171,63 @@ namespace TurboRush.EditorTools
             return t;
         }
 
+        /// <summary>
+        /// Rolling green hills: long climbs and descents, an S-bend over the top, windmills, and two gentle kicker
+        /// jumps on the straights (start straight and the valley straight). No bridges: the ground follows the road.
+        /// </summary>
+        private static TrackDefinition Hills()
+        {
+            TrackDefinition t = Make("hills");
+            t.id = "hills";
+            t.displayName = "Hilltop Hops";
+            t.theme = TrackTheme.Hills;
+            t.unlockStars = 6;
+            t.controlPoints = new[]
+            {
+                new Vector3(0, 0, 0), new Vector3(0, 3, 160), new Vector3(25, 9, 275), new Vector3(100, 15, 345), new Vector3(205, 14, 355),
+                new Vector3(290, 8, 310), new Vector3(325, 2, 225), new Vector3(325, 0, 100), new Vector3(330, 5, -20), new Vector3(305, 13, -125),
+                new Vector3(240, 17, -170), new Vector3(175, 15, -210), new Vector3(105, 12, -195), new Vector3(48, 6, -155), new Vector3(8, 1, -80)
+            };
+            t.laps = 2;
+            t.autoBankFactor = 6f;
+            t.maxBank = 9f;
+            t.roadHalfWidth = 7.5f;
+            t.curbWidth = 1.2f;
+            t.shoulderWidth = 3.2f;
+            t.runoffWidth = 18f;
+            t.openRunoff = new LapRange[0];
+            t.checkpointsPerLap = 8;
+            t.groundHeight = -1f;
+            t.pillarSpacing = 36f;
+            t.bridgeMinHeight = 60f; // never a deck: the hills rise to meet the road
+            t.bridges = new LapRange[0];
+            t.tunnels = new LapRange[0];
+            // Lips at ~150 m (start straight, 82 m of straight after) and ~800 m (valley straight, 110 m after).
+            t.jumps = new[] { new JumpRamp(0.10f, 10f, 0.7f), new JumpRamp(0.532f, 10f, 0.7f) };
+            t.sea = false;
+            t.seed = 53;
+            t.treeCount = 230;
+            t.rockCount = 30;
+            t.cactusCount = 0;
+            t.cloudCount = 28;
+            t.buildingCount = 16;
+            t.windmillCount = 7;
+            t.mountainRing = true;
+            t.sceneryRadius = 640f;
+            t.palette = new TrackPalette
+            {
+                skyTop = new Color(0.2f, 0.5f, 0.95f), skyHorizon = new Color(0.86f, 0.93f, 1f), skyBottom = new Color(0.7f, 0.85f, 0.95f),
+                fog = new Color(0.8f, 0.9f, 0.97f), fogStart = 200f, fogEnd = 950f, ambient = new Color(0.62f, 0.68f, 0.72f),
+                sun = new Color(1f, 0.95f, 0.84f), sunEuler = new Vector3(40f, -110f, 0f),
+                ground = new Color(0.4f, 0.72f, 0.28f), groundAlt = new Color(0.52f, 0.8f, 0.32f), verge = new Color(0.45f, 0.76f, 0.3f),
+                road = new Color(0.34f, 0.34f, 0.37f), roadLine = Color.white, curbA = new Color(0.98f, 0.55f, 0.1f), curbB = Color.white,
+                barrierA = new Color(0.62f, 0.32f, 0.9f), barrierB = Color.white, structure = new Color(0.8f, 0.78f, 0.74f),
+                scenery = new Color(0.22f, 0.58f, 0.26f), sceneryAlt = new Color(0.6f, 0.58f, 0.55f), mountain = new Color(0.55f, 0.55f, 0.78f),
+                water = new Color(0.15f, 0.55f, 0.8f)
+            };
+            return t;
+        }
+
         /// <summary>Top-down map preview for the track select card.</summary>
         public static Sprite Preview(TrackDefinition t)
         {
@@ -204,6 +261,13 @@ namespace TurboRush.EditorTools
             for (float d = 0; d < path.Length; d += 1.5f) Disc(ToPx(path.PositionAt(d, 0)), 13f, Color.white);
             for (float d = 0; d < path.Length; d += 1.5f) Disc(ToPx(path.PositionAt(d, 0)), 9.5f, t.IsTunnel(d / path.Length) ? new Color(0.25f, 0.2f, 0.2f) : new Color(0.25f, 0.27f, 0.32f));
             for (float d = 0; d < path.Length; d += 1.5f) if (Mathf.Repeat(d, 30f) < 15f) Disc(ToPx(path.PositionAt(d, 0)), 1.6f, new Color(1f, 0.85f, 0.2f));
+            if (t.jumps != null)
+                foreach (JumpRamp j in t.jumps)
+                {
+                    Vector2 c = ToPx(path.PositionAt(j.lapFraction * path.Length, 0));
+                    Disc(c, 11f, Color.white);
+                    Disc(c, 8f, new Color(1f, 0.75f, 0.1f));
+                }
             // start line chequer + direction arrow
             Vector2 s0 = ToPx(path.PositionAt(0, 0));
             for (int i = -2; i <= 2; i++) Disc(s0 + new Vector2(i * 4f, 0), 2.6f, i % 2 == 0 ? Color.white : Color.black);

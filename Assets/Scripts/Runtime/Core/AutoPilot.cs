@@ -107,7 +107,13 @@ namespace TurboRush.Core
             float raceStart = Time.realtimeSinceStartup;
             int frames = 0;
             float worst = 0f;
-            bool shotRacing = false, paused = false, jumped = false;
+            bool shotRacing = false, paused = false, jumped = false, airShot = false, rampShot = false;
+            int takeoffs = 0, landings = 0;
+            float maxAir = 0f, maxHeight = 0f;
+            System.Action onTakeoff = () => takeoffs++;
+            System.Action<float> onLanded = a => { landings++; maxAir = Mathf.Max(maxAir, a); };
+            race.Sim.PlayerTookOff += onTakeoff;
+            race.Sim.PlayerLanded += onLanded;
             float targetLane = 2.5f;
             while (s.States.State == GameState.Racing && Time.realtimeSinceStartup - raceStart < 400f)
             {
@@ -141,9 +147,31 @@ namespace TurboRush.Core
                     race.DebugJumpNearFinish(150f);
                 }
                 if (el > 12f && el < 12.1f) yield return Shot("06b_racing");
+                maxHeight = Mathf.Max(maxHeight, race.Sim.Player.Height);
+                if (!rampShot && race.Sim.Track.JumpCount > 0)
+                {
+                    float toLip = race.Sim.Track.Path.DeltaOnLoop(race.Sim.Track.JumpLip(0), race.Sim.Player.Distance);
+                    if (toLip > 30f && toLip < 42f)
+                    {
+                        rampShot = true;
+                        yield return Shot("06d_ramp");
+                    }
+                }
+                if (!airShot && race.Sim.Player.Airborne && race.Sim.Player.AirTime > 0.15f && race.Sim.Player.Height > 0.9f)
+                {
+                    airShot = true;
+                    yield return Shot("06c_jump");
+                }
                 yield return null;
             }
             race.Input.Override = float.NaN;
+            race.Sim.PlayerTookOff -= onTakeoff;
+            race.Sim.PlayerLanded -= onLanded;
+            if (race.Sim.Track.JumpCount > 0)
+            {
+                m_Report.AppendLine($"Jumps: {takeoffs} take-offs, {landings} landings, longest air time {maxAir:0.00}s, max height {maxHeight:0.00} m");
+                if (!DebugArgs.Fast) Check(takeoffs > 0 && landings == takeoffs && maxHeight < 3f, "player jumped and landed safely");
+            }
             float raceSeconds = Time.realtimeSinceStartup - raceStart;
             m_Report.AppendLine($"Race wall time {raceSeconds:0.0}s, sim clock {race.Sim.Clock:0.0}s, frames {frames}, avg FPS {frames / Mathf.Max(0.01f, raceSeconds):0.0}, worst frame {worst * 1000f:0}ms (desktop xvfb software GL: NOT representative of phones)");
             Check(s.States.State == GameState.Finishing, "player finished → Finishing");

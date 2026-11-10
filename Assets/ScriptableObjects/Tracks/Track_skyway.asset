@@ -48,6 +48,7 @@ MonoBehaviour:
   bridgeMinHeight: 4
   bridges: []
   tunnels: []
+  jumps: []
   sea: 0
   seaLevel: -2
   seed: 11
@@ -56,6 +57,7 @@ MonoBehaviour:
   cactusCount: 0
   cloudCount: 34
   buildingCount: 14
+  windmillCount: 0
   mountainRing: 1
   sceneryRadius: 620
   palette:

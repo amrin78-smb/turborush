@@ -25,6 +25,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5ea15eefe3efcbb9cbc0e321d7c1092f, type: 2}
   - {fileID: 11400000, guid: 102801dda3a8b3161928e7dc7b842779, type: 2}
   - {fileID: 11400000, guid: ce54fb2a6dbf2af21a2cf1b80ab5ca54, type: 2}
+  - {fileID: 11400000, guid: e78437921face1a7da4ffb7660097ad0, type: 2}
   ai: {fileID: 11400000, guid: d41c65ab5df1e9a71885a14132b006c7, type: 2}
   race:
     racerCount: 6
@@ -48,6 +49,12 @@ MonoBehaviour:
     respawnSpeedFactor: 0.45
     respawnGhostSeconds: 2
     respawnLaneFraction: 0.25
+    slopeSpeedEffect: 1.2
+    jumpGravity: 14
+    airSteerControl: 0.35
+    landingSpeedKeep: 0.985
+    takeoffDrop: 0.05
+    contactHeight: 0.9
     bumpSpeedKeep: 0.94
     bumpLateralKick: 2.5
   audio: {fileID: 11400000, guid: 42e7f0bcb8a04122080b047909997003, type: 2}

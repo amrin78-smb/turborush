@@ -91,7 +91,7 @@ namespace TurboRush.Tests
         [Test]
         public void ProgressIncreasesWithSpeedTimesDeltaTime()
         {
-            RaceSimulation sim = TestTracks.Sim(1);
+            RaceSimulation sim = TestTracks.Sim(1, tuning: new RaceTuning { racerCount = 1, slopeSpeedEffect = 0f }); // flat-road maths
             RacerState r = sim.Player;
             r.Speed = 20f;
             r.Distance = 10f;
@@ -103,7 +103,7 @@ namespace TurboRush.Tests
         [Test]
         public void AutoAcceleratesSmoothlyToMaxSpeedWithoutInput()
         {
-            RaceSimulation sim = TestTracks.Sim(1, tuning: new RaceTuning { racerCount = 1, cornerDrift = 0f });
+            RaceSimulation sim = TestTracks.Sim(1, tuning: new RaceTuning { racerCount = 1, cornerDrift = 0f, slopeSpeedEffect = 0f }); // the test loop has a hill; slopes are tested separately
             float last = 0f;
             for (int i = 0; i < 60 * 12; i++)
             {

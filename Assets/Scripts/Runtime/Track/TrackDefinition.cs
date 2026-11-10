@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace TurboRush.Track
 {
-    public enum TrackTheme { Skyway, Desert, Coastal }
+    public enum TrackTheme { Skyway, Desert, Coastal, Hills }
 
     /// <summary>A range of the lap expressed as fractions 0..1 (start may be greater than end to wrap past the line).</summary>
     [Serializable]
@@ -17,6 +17,25 @@ namespace TurboRush.Track
         {
             return start <= end ? lapFraction >= start && lapFraction <= end : lapFraction >= start || lapFraction <= end;
         }
+    }
+
+    /// <summary>
+    /// A kicker ramp across the asphalt. The car climbs <see cref="length"/> metres to <see cref="height"/> and then the
+    /// ground drops away at the lip, so it flies a short, gentle arc and lands on the road ahead.
+    /// </summary>
+    [Serializable]
+    public struct JumpRamp
+    {
+        [Tooltip("Lap fraction (0..1) of the ramp lip (its highest point).")]
+        public float lapFraction;
+        [Tooltip("Ramp length in metres, from the road surface up to the lip.")]
+        public float length;
+        [Tooltip("Lip height in metres above the road.")]
+        public float height;
+        public JumpRamp(float lapFraction, float length = 10f, float height = 0.7f) { this.lapFraction = lapFraction; this.length = length; this.height = height; }
+
+        /// <summary>Ramp profile: rises gently and steepens towards the lip (u 0..1 → 0..height; 0 outside the ramp).</summary>
+        public static float Profile(float u, float height) => u <= 0f || u > 1f ? 0f : height * (0.6f * u + 0.4f * u * u);
     }
 
     [Serializable]
@@ -90,6 +109,8 @@ namespace TurboRush.Track
         [Tooltip("Lap ranges forced to be bridges (the ground/sea below is not raised to meet the road).")]
         public LapRange[] bridges = Array.Empty<LapRange>();
         public LapRange[] tunnels = Array.Empty<LapRange>();
+        [Tooltip("Gentle kicker ramps. Place them on straights with at least 60 m of straight road after the lip.")]
+        public JumpRamp[] jumps = Array.Empty<JumpRamp>();
         public bool sea;
         public float seaLevel = -2f;
 
@@ -100,6 +121,7 @@ namespace TurboRush.Track
         public int cactusCount;
         public int cloudCount = 24;
         public int buildingCount;
+        public int windmillCount;
         public bool mountainRing = true;
         public float sceneryRadius = 650f;
 

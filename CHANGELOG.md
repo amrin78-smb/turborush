@@ -1,6 +1,16 @@
 # Changelog
 
-## Unreleased
+## 0.2.0 (versionCode 2) — 2026-11-10, M9: slopes, jumps and a fourth track
+- **Hilltop Hops** (unlock at 6 ★): 1503 m rolling-hills loop with 17 m of climb, an S-bend over the top, windmills, and two jumps.
+- **Jumps**: `JumpRamp` data on `TrackDefinition`. Cars ride up the ramp and fly a ballistic arc from the lip (`RaceTuning`: gravity 14 m/s²,
+  35 % steering in the air, 98.5 % speed kept on landing). Airborne cars do not collide with cars below. Jump and landing sounds,
+  a landing vibration, and a "BIG JUMP!" banner for long jumps. The car pitches with its flight path and its shadow stays on the road.
+- **Slopes** now matter: the target speed drops a little uphill and rises a little downhill (`slopeSpeedEffect`, same for every car).
+- The race simulation splits slow frames into ≤ 1/60 s sub-steps, so jumps and contacts behave the same at any frame rate.
+- Track-select cards shrink to fit four tracks at every aspect ratio. Track previews mark the jumps.
+- Validator: jumps must be in range and on straight road from the ramp to 60 m past the lip.
+- Tests: 46 EditMode (10 new: ramp profile, take-off and landing, slow hop, shoulder bypass, air steering, no contact when flying over,
+  respawn clears air state, slopes, AI flies every shipped jump) + 3 PlayMode.
 - Kimi/Blender prompts for 8 original car models (`Docs/ArtBriefs/`, generator `Tools/gen_kimi_car_prompts.py`).
 
 ## 0.1.0 (versionCode 1) — 2026-11-09, first release candidate

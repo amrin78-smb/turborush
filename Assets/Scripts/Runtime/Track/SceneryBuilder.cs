@@ -139,6 +139,12 @@ namespace TurboRush.Track
                 if (!TryPlace(clear + 12f, out Vector3 p)) continue;
                 House(KitAt(p), p, rng);
             }
+            int mills = Mathf.RoundToInt(def.windmillCount * Mathf.Lerp(0.5f, 1f, density));
+            for (int i = 0; i < mills; i++)
+            {
+                if (!TryPlace(clear + 25f, out Vector3 p)) continue;
+                Windmill(KitAt(p), p, rng);
+            }
             for (int i = 0; i < kits.Length; i++)
                 if (kits[i].VertexCount > 0) TrackBuilder.AddRenderer(root, "Props" + i, kits[i].ToMesh("Props" + i), mats.vertexLit);
 
@@ -192,7 +198,7 @@ namespace TurboRush.Track
 
         private static float GroundHeight(TrackDefinition def, float x, float z, Proximity prox, Vector3 center, float extent, out float trackDist)
         {
-            float amp = def.theme == TrackTheme.Skyway ? 14f : def.theme == TrackTheme.Desert ? 7f : 4f;
+            float amp = def.theme == TrackTheme.Skyway ? 14f : def.theme == TrackTheme.Desert ? 7f : def.theme == TrackTheme.Hills ? 26f : 4f;
             float h = def.groundHeight + (Noise(x, z, 0.006f) - 0.4f) * amp + (Noise(x, z, 0.03f) - 0.5f) * amp * 0.25f;
             if (def.sea)
             {
@@ -323,6 +329,34 @@ namespace TurboRush.Track
             k.Prism(p + new Vector3(1.4f * s, 1.9f * s, 0), Vector3.up, 0.3f * s, 0.28f * s, 1.8f * s, 5, g);
             k.Prism(p + new Vector3(-0.45f * s, 2.8f * s, 0), Vector3.left, 0.28f * s, 0.28f * s, 0.9f * s, 5, g);
             k.Prism(p + new Vector3(-1.25f * s, 2.7f * s, 0), Vector3.up, 0.28f * s, 0.25f * s, 1.4f * s, 5, g);
+        }
+
+        /// <summary>A friendly static windmill: white tower, red cap and four sails, turned to a random heading.</summary>
+        private static void Windmill(MeshKit k, Vector3 p, System.Random rng)
+        {
+            float s = 1f + (float)rng.NextDouble() * 0.35f;
+            Color tower = new Color(0.97f, 0.95f, 0.9f), cap = new Color(0.86f, 0.28f, 0.22f), sail = new Color(0.98f, 0.97f, 0.94f), frame = new Color(0.55f, 0.4f, 0.28f);
+            k.Prism(p - Vector3.up * 1f, Vector3.up, 3.6f * s, 2.3f * s, 15f * s, 8, tower);
+            Vector3 top = p + Vector3.up * 14f * s;
+            k.Prism(top, Vector3.up, 2.8f * s, 0f, 3.6f * s, 8, cap);
+            float ang = (float)rng.NextDouble() * Mathf.PI * 2f;
+            Vector3 face = new Vector3(Mathf.Cos(ang), 0f, Mathf.Sin(ang));
+            Vector3 hub = top + Vector3.up * 0.8f * s + face * 2.6f * s;
+            Vector3 side = Vector3.Cross(Vector3.up, face).normalized;
+            float spin = (float)rng.NextDouble() * 90f;
+            for (int b = 0; b < 4; b++)
+            {
+                float a = (spin + b * 90f) * Mathf.Deg2Rad;
+                Vector3 dir = side * Mathf.Cos(a) + Vector3.up * Mathf.Sin(a);
+                Vector3 perp = Vector3.Cross(face, dir).normalized;
+                Vector3 r0 = hub + dir * 1.2f * s, r1 = hub + dir * 9f * s;
+                Vector3 w1 = perp * 1.9f * s;
+                // Double-sided sail so it reads from any angle.
+                k.Quad(r0, r1, r1 + w1, r0 + w1 * 0.6f, sail);
+                k.Quad(r0 + w1 * 0.6f, r1 + w1, r1, r0, sail * 0.9f);
+                k.Box((hub + r1) * 0.5f, new Vector3(0.25f, 0.25f, 9f) * s, Quaternion.LookRotation(dir, face), frame); // spar
+            }
+            k.Prism(hub - face * 0.4f * s, face, 0.6f * s, 0.5f * s, 0.9f * s, 6, frame);
         }
 
         private static void House(MeshKit k, Vector3 p, System.Random rng)

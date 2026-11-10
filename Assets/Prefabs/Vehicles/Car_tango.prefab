@@ -51,6 +51,7 @@ MonoBehaviour:
   m_BodyRenderer: {fileID: 2504911107390334816}
   m_LeanDegrees: 4.5
   m_PitchDegrees: 1.5
+  m_AirPitchDegrees: 12
 --- !u!1 &995229004986319994
 GameObject:
   m_ObjectHideFlags: 0

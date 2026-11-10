@@ -1,6 +1,6 @@
 # Turbo Rush 3D: project status
 
-_Last updated: 2026-11-10. Release candidate 0.1.0 (versionCode 1), published as GitHub release v0.1.0._
+_Last updated: 2026-11-10. Version 0.2.0 (versionCode 2): M9 slopes, jumps and a fourth track. 0.1.0 is GitHub release v0.1.0._
 
 Owner feedback 2026-11-10: "It plays well" (informal; the Redmi A3 checklist below has not been filled in yet).
 
@@ -38,6 +38,8 @@ because Unity's deny list makes PowerVR devices skip Vulkan and fall through to 
 | 5 AI opponents (configurable 2–8 racers in total), lanes, overtaking, recovery, positions | **Implemented** |
 | Skyway Circuit | **Implemented** (generated geometry; strongest visual polish of the three) |
 | Desert Dash, Coastal Loop | **Implemented and playable**, with less art polish than Skyway (functional content milestone) |
+| Hilltop Hops (M9) | **Implemented and playable**: rolling hills, windmills, two jumps; same art level as Desert/Coastal |
+| Slopes and jumps (M9) | **Implemented**: slope speed effect, kicker ramps, ballistic flight, air steering, safe landing; verified in automated tests and the Linux autopilot. Feel on a phone: **Pending physical-device validation** |
 | Menus, garage, track select, settings, save/progression/unlocks | **Implemented** |
 | Cars, icons, textures | Original, procedurally generated; stylised low-poly placeholder art |
 | Audio | Functional synthesised placeholders |
@@ -85,5 +87,5 @@ because Unity's deny list makes PowerVR devices skip Vulkan and fall through to 
 |---|---|---|
 | M7: Proper car models | 8 original Blender models made with Kimi from `Docs/ArtBriefs/` (prompts zip). A Unity import step turns the material slots into vertex colour, paint mask and emission, and generates prefabs with spinning and steering wheels and an LOD1 for distant AI cars. Cars without a model keep the procedural mesh. | Prompts delivered; waiting for the models |
 | M8: Device validation and performance | Fill in `Docs/REDMI_A3_TEST_CHECKLIST.md` with measured FPS and thermals, and tune the Low preset | Needs the owner's Redmi A3 |
-| M9: More content | GDD "later content": slopes and gentle jumps, plus a 4th track | Not started |
+| M9: More content | GDD "later content": slopes and gentle jumps, plus a 4th track (Hilltop Hops) | **Done** in 0.2.0; device feel pending |
 | M10: Polish | Better engine and music audio, a release keystore and store-ready signing | Not started |

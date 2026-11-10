@@ -94,6 +94,8 @@ namespace TurboRush.Race
             Sim.PlayerHitBarrier += OnBarrier;
             Sim.PlayerBumped += OnBump;
             Sim.Respawned += OnRespawned;
+            Sim.PlayerTookOff += OnTookOff;
+            Sim.PlayerLanded += OnLanded;
 
             m_Camera.Init(Sim, cfg.camera, q.farClip);
             UI = gameObject.AddComponent<RaceUI>();
@@ -119,6 +121,8 @@ namespace TurboRush.Race
                 Sim.PlayerHitBarrier -= OnBarrier;
                 Sim.PlayerBumped -= OnBump;
                 Sim.Respawned -= OnRespawned;
+                Sim.PlayerTookOff -= OnTookOff;
+                Sim.PlayerLanded -= OnLanded;
             }
             if (m_Services != null)
             {
@@ -295,6 +299,18 @@ namespace TurboRush.Race
         {
             m_Services.Audio.Play(Sfx.Bump, 0.7f);
             Haptics.Pulse(25);
+        }
+
+        private void OnTookOff()
+        {
+            m_Services.Audio.Play(Sfx.Jump, 0.7f);
+        }
+
+        private void OnLanded(float airTime)
+        {
+            m_Services.Audio.Play(Sfx.Land, Mathf.Clamp(airTime, 0.35f, 0.8f));
+            Haptics.Pulse(35);
+            if (airTime >= 0.4f && State == GameState.Racing) UI.ShowJump();
         }
 
         private void OnRespawned(int index)

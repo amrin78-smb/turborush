@@ -41,6 +41,7 @@ namespace TurboRush.Track
             }
             BuildStartGantry(def, path, deco);
             BuildCheckpointFlags(def, path, deco);
+            BuildJumps(def, path, deco);
             Emit(root.transform, "Landmarks", road, deco, mats);
             return root;
         }
@@ -256,6 +257,68 @@ namespace TurboRush.Track
                 Vector3 A(float x, float y) => s.position + s.right * x + s.up * y;
                 k.Quad(A(x0, y0) + back, A(x0, y1) + back, A(x1, y1) + back, A(x1, y0) + back, cc);
                 k.Quad(A(x1, y0) + front, A(x1, y1) + front, A(x0, y1) + front, A(x0, y0) + front, cc);
+            }
+        }
+
+        /// <summary>Kicker ramps (yellow with red arrows, striped lip) and a warning sign on both sides before each one.</summary>
+        private static void BuildJumps(TrackDefinition def, TrackPath path, MeshKit k)
+        {
+            if (def.jumps == null) return;
+            float hw = def.roadHalfWidth;
+            Color yellow = new Color(1f, 0.82f, 0.12f), orange = new Color(1f, 0.6f, 0.1f), red = new Color(0.92f, 0.16f, 0.12f), dark = new Color(0.1f, 0.1f, 0.12f);
+            foreach (JumpRamp j in def.jumps)
+            {
+                float len = Mathf.Max(1f, j.length), lip = j.lapFraction * path.Length, start = lip - len;
+                int steps = Mathf.Max(2, Mathf.CeilToInt(len));
+                Vector3 Top(float x, float lat, float lift = 0.03f)
+                {
+                    path.Sample(start + x, out TrackSample s);
+                    return P(s, lat, JumpRamp.Profile(Mathf.Clamp(x / len, 1e-4f, 1f), j.height) + lift);
+                }
+                Vector3 Base(float x, float lat)
+                {
+                    path.Sample(start + x, out TrackSample s);
+                    return P(s, lat, 0f);
+                }
+                for (int i = 0; i < steps; i++)
+                {
+                    float x0 = len * i / steps, x1 = len * (i + 1) / steps;
+                    Color band = (i / 2) % 2 == 0 ? yellow : orange;
+                    k.Quad(Top(x0, -hw), Top(x1, -hw), Top(x1, hw), Top(x0, hw), band);                       // ramp surface (faces up)
+                    k.Quad(Base(x1, -hw), Top(x1, -hw), Top(x0, -hw), Base(x0, -hw), orange * 0.85f);         // left side (faces −right)
+                    k.Quad(Base(x0, hw), Top(x0, hw), Top(x1, hw), Base(x1, hw), orange * 0.85f);             // right side (faces +right)
+                }
+                // Lip face (faces forward), striped so the drop reads from the air.
+                int stripes = 8;
+                for (int i = 0; i < stripes; i++)
+                {
+                    float a = -hw + 2f * hw * i / stripes, b = -hw + 2f * hw * (i + 1) / stripes;
+                    k.Quad(Base(len, b), Top(len, b), Top(len, a), Base(len, a), i % 2 == 0 ? yellow : dark);
+                }
+                // Arrows painted on the ramp, pointing the way to go.
+                foreach (float u in new[] { 0.22f, 0.62f })
+                {
+                    float xb = len * u, xt = Mathf.Min(len, xb + len * 0.28f);
+                    foreach (float lat in new[] { -hw * 0.5f, hw * 0.5f })
+                        k.Tri(Top(xt, lat, 0.06f), Top(xb, lat + 1.6f, 0.06f), Top(xb, lat - 1.6f, 0.06f), red);
+                }
+                // Warning signs 70 m before the lip, facing the oncoming cars.
+                path.Sample(lip - 70f, out TrackSample sg);
+                float e = def.roadHalfWidth + def.shoulderWidth + BarrierThickness * 0.5f;
+                Vector3 back = -sg.forward * 0.12f;
+                for (int side = -1; side <= 1; side += 2)
+                {
+                    Vector3 basePt = sg.position + sg.right * (e * side) + sg.up * BarrierHeight;
+                    k.Prism(basePt, sg.up, 0.08f, 0.08f, 2.2f, 4, Color.white);
+                    Vector3 c = basePt + sg.up * 2.6f + back;
+                    Vector3 r = sg.right * 1.05f, u = sg.up * 1.05f;
+                    k.Quad(c - r, c + u, c + r, c - u, yellow);
+                    Vector3 c2 = c + back * 0.2f;
+                    Vector3 rr = sg.right * 0.5f, uu = sg.up * 0.32f;
+                    k.Tri(c2 - rr - uu, c2 + rr + uu, c2 + rr - uu, dark);
+                    // Back of the board, so it is not invisible from behind.
+                    k.Quad(c - r - back * 0.5f, c - u - back * 0.5f, c + r - back * 0.5f, c + u - back * 0.5f, Color.Lerp(Color.white, yellow, 0.3f) * 0.8f);
+                }
             }
         }
 

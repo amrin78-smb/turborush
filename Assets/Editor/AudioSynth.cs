@@ -35,6 +35,8 @@ namespace TurboRush.EditorTools
             sfx[(int)Sfx.Barrier] = Save(SfxDir + "barrier.wav", Scrape(), false);
             sfx[(int)Sfx.Unlock] = Save(SfxDir + "unlock.wav", Notes(new[] { 1047f, 1319f, 1568f, 2093f }, 0.08f, 0.4f, 0.5f), false);
             sfx[(int)Sfx.Star] = Save(SfxDir + "star.wav", Notes(new[] { 1568f }, 0.35f, 0.4f), false);
+            sfx[(int)Sfx.Jump] = Save(SfxDir + "jump.wav", Tone(0.32f, 330f, 520f, 0.32f, 0.01f, 0.18f), false);
+            sfx[(int)Sfx.Land] = Save(SfxDir + "land.wav", Thump(0.26f, 80f, 0.6f), false);
             lib.sfx = sfx;
             lib.menuMusic = Save(MusicDir + "menu_music.wav", Music(118f, 16, false), true, true);
             lib.raceMusic = Save(MusicDir + "race_music.wav", Music(138f, 16, true), true, true);

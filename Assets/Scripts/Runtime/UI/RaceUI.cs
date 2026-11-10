@@ -295,7 +295,13 @@ namespace TurboRush.UI
             m_OvertakePop.Play(1.1f);
         }
 
-        public void SetSteerHint(bool on) => m_Hint.SetActive(on);
+        public void ShowJump()
+        {
+            m_Banner.SetText("BIG JUMP!");
+            m_BannerPop.Play(1.0f);
+        }
+
+                public void SetSteerHint(bool on) => m_Hint.SetActive(on);
 
         public void ShowResults(RaceReward reward)
         {

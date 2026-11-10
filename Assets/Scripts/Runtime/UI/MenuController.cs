@@ -266,32 +266,35 @@ namespace TurboRush.UI
             BackButton(root);
             Title(root, "Tracks");
             int n = m_Cfg.tracks.Length;
+            // Up to three cards at full size; more cards shrink to fit the 1920-wide reference width.
+            float gap = n > 3 ? 36f : 50f;
+            float w = Mathf.Min(540f, (1780f - (n - 1) * gap) / Mathf.Max(1, n)), h = 640;
+            float f = w / 540f;
             for (int i = 0; i < n; i++)
             {
                 TrackDefinition t = m_Cfg.tracks[i];
-                float w = 540, h = 640;
                 Button card = UIKit.Button(root, "Card_" + t.id, null, null, Color.white, new Vector2(w, h), () => TryStart(t));
-                UIKit.Place((RectTransform)card.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2((i - (n - 1) * 0.5f) * (w + 50), -60), new Vector2(w, h));
+                UIKit.Place((RectTransform)card.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2((i - (n - 1) * 0.5f) * (w + gap), -60), new Vector2(w, h));
                 Image prev = UIKit.Image(card.transform, "Preview", t.preview, Color.white);
-                UIKit.Place(prev.rectTransform, new Vector2(0.5f, 1), new Vector2(0.5f, 1), new Vector2(0, -20), new Vector2(w - 40, 340));
-                TextMeshProUGUI name = UIKit.Label(card.transform, "Name", t.displayName, 58, m_Skin.textDark, TextAlignmentOptions.Center);
+                UIKit.Place(prev.rectTransform, new Vector2(0.5f, 1), new Vector2(0.5f, 1), new Vector2(0, -20), new Vector2(w - 40, (w - 40) * 0.625f));
+                TextMeshProUGUI name = UIKit.Label(card.transform, "Name", t.displayName, Mathf.Round(58 * Mathf.Lerp(1f, f, 0.6f)), m_Skin.textDark, TextAlignmentOptions.Center);
                 UIKit.Place(name.rectTransform, new Vector2(0.5f, 1), new Vector2(0.5f, 1), new Vector2(0, -375), new Vector2(w - 20, 80));
                 TextMeshProUGUI info = UIKit.Label(card.transform, "Info", "", 40, m_Skin.textDark, TextAlignmentOptions.Center);
                 UIKit.Place(info.rectTransform, new Vector2(0.5f, 1), new Vector2(0.5f, 1), new Vector2(0, -455), new Vector2(w - 20, 60));
                 for (int s = 0; s < 3; s++)
                 {
                     Image st = UIKit.Image(card.transform, "Star" + s, m_Skin.Get(Icon.Star), m_Skin.accent);
-                    UIKit.Place(st.rectTransform, new Vector2(0.5f, 0), new Vector2(0.5f, 0), new Vector2((s - 1) * 90, 30), new Vector2(80, 80));
+                    UIKit.Place(st.rectTransform, new Vector2(0.5f, 0), new Vector2(0.5f, 0), new Vector2((s - 1) * 90 * Mathf.Min(1f, f + 0.1f), 30), new Vector2(80, 80));
                 }
                 Image lockPanel = UIKit.Image(card.transform, "Locked", m_Skin.rounded, new Color(0.1f, 0.12f, 0.25f, 0.82f));
                 UIKit.Stretch(lockPanel.rectTransform);
                 Image lockIcon = UIKit.Image(lockPanel.transform, "Icon", m_Skin.Get(Icon.Lock), Color.white);
                 UIKit.Place(lockIcon.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0, 150), new Vector2(150, 150));
                 Image needStar = UIKit.Image(lockPanel.transform, "NeedStar", m_Skin.Get(Icon.Star), m_Skin.accent);
-                UIKit.Place(needStar.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-150, 10), new Vector2(80, 80));
+                UIKit.Place(needStar.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-150 * f, 10), new Vector2(80, 80));
                 TextMeshProUGUI need = UIKit.Label(lockPanel.transform, "Need", "", 56, Color.white, TextAlignmentOptions.Left, true);
-                UIKit.Place(need.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0, 0.5f), new Vector2(-100, 10), new Vector2(320, 80));
-                TextMeshProUGUI lockedName = UIKit.Label(lockPanel.transform, "Name", t.displayName, 54, Color.white, TextAlignmentOptions.Center, true);
+                UIKit.Place(need.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0, 0.5f), new Vector2(-150 * f + 50, 10), new Vector2(w * 0.5f + 150 * f - 60, 80));
+                TextMeshProUGUI lockedName = UIKit.Label(lockPanel.transform, "Name", t.displayName, Mathf.Round(54 * Mathf.Lerp(1f, f, 0.6f)), Color.white, TextAlignmentOptions.Center, true);
                 UIKit.Place(lockedName.rectTransform, new Vector2(0.5f, 1), new Vector2(0.5f, 1), new Vector2(0, -375), new Vector2(w - 20, 80));
                 m_TrackCards.Add(card.gameObject);
             }

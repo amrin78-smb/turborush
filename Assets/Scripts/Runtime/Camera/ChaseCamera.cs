@@ -51,7 +51,9 @@ namespace TurboRush.CameraRig
             float minY = back.position.y + 1.2f;
             if (desired.y < minY) desired.y = minY;
 
-            Vector3 carPos = here.position + here.right * p.Lateral;
+            // Follow jumps gently (no shake): the camera rises a little and keeps the car framed.
+            desired += Vector3.up * (p.Height * 0.35f);
+            Vector3 carPos = here.position + here.right * p.Lateral + Vector3.up * (p.Height * 0.6f);
             Vector3 lookTarget = Vector3.Lerp(carPos, ahead.position + ahead.right * (p.Lateral * 0.5f), 0.55f) + Vector3.Slerp(Vector3.up, here.up, m_S.bankFollow) * m_S.lookHeight;
             Quaternion desiredRot = Quaternion.LookRotation((lookTarget - desired).normalized, up);
 

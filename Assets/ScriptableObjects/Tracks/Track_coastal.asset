@@ -49,6 +49,7 @@ MonoBehaviour:
   - start: 0.4
     end: 0.5
   tunnels: []
+  jumps: []
   sea: 1
   seaLevel: -1.5
   seed: 37
@@ -57,6 +58,7 @@ MonoBehaviour:
   cactusCount: 0
   cloudCount: 22
   buildingCount: 26
+  windmillCount: 0
   mountainRing: 0
   sceneryRadius: 560
   palette:

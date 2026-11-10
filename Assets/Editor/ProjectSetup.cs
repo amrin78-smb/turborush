@@ -134,7 +134,20 @@ namespace TurboRush.EditorTools
                             if (k > 1e-4f) minR = Mathf.Min(minR, 1f / k);
                         }
                         if (minR < 30f) errors.Add($"Track {t.id} has a corner tighter than 30 m (min radius {minR:0} m)");
-                        Debug.Log($"[TR Validate] {t.displayName}: lap {path.Length:0} m × {t.laps} laps, tightest radius {minR:0} m");
+                        if (t.jumps != null)
+                            foreach (JumpRamp j in t.jumps)
+                            {
+                                if (j.lapFraction < 0f || j.lapFraction >= 1f || j.length < 6f || j.length > 20f || j.height < 0.2f || j.height > 1.2f)
+                                    errors.Add($"Track {t.id} jump at {j.lapFraction:0.000} out of range (length 6–20 m, height 0.2–1.2 m)");
+                                float lip = j.lapFraction * path.Length;
+                                for (float d = lip - j.length; d <= lip + 60f; d += 2f)
+                                {
+                                    float k = Mathf.Abs(path.Sample(d).curvature);
+                                    if (k > 1f / 150f) { errors.Add($"Track {t.id} jump at {j.lapFraction:0.000} is not on a straight (radius {1f / k:0} m at {d:0} m); it needs straight road from the ramp to 60 m past the lip"); break; }
+                                }
+                                if (t.IsTunnel(Mathf.Repeat(lip, path.Length) / path.Length)) errors.Add($"Track {t.id} jump at {j.lapFraction:0.000} is inside a tunnel");
+                            }
+                        Debug.Log($"[TR Validate] {t.displayName}: lap {path.Length:0} m × {t.laps} laps, tightest radius {minR:0} m, jumps {(t.jumps != null ? t.jumps.Length : 0)}");
                     }
                     catch (Exception e) { errors.Add($"Track {t.id} path error: {e.Message}"); }
                 }
