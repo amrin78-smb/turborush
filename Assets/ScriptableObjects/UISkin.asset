@@ -42,6 +42,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 1f6c4aeef3ad12bebbdc6330ba0cbd59, type: 3}
   - {fileID: 21300000, guid: 23ca6197ead677527a9ea7bdbe17e1fb, type: 3}
   - {fileID: 21300000, guid: d950158ccd0e92c0597a571527bc1c27, type: 3}
+  - {fileID: 21300000, guid: 0b0c37c8ad67fe6adb6c1b85c03272f2, type: 3}
+  - {fileID: 21300000, guid: 6614b887b6f232f67b8cc923a4b6bd15, type: 3}
   primary: {r: 1, g: 0.42, b: 0.1, a: 1}
   secondary: {r: 0.12, g: 0.55, b: 0.98, a: 1}
   accent: {r: 1, g: 0.8, b: 0.1, a: 1}

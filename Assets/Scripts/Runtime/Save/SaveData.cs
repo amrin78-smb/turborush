@@ -18,6 +18,8 @@ namespace TurboRush.Save
         [Tooltip("Steering sensitivity multiplier 0.6..1.4")] public float steeringSensitivity = 1f;
         public SpeedUnit units = SpeedUnit.Kmh;
         public QualityChoice quality = QualityChoice.Auto;
+        [Tooltip("AI difficulty (Easy = the original 0.1–0.3 field). Saves without this field load as Normal.")]
+        public AI.Difficulty difficulty = AI.Difficulty.Normal;
     }
 
     [Serializable]
@@ -79,6 +81,7 @@ namespace TurboRush.Save
             settings.steeringSensitivity = Mathf.Clamp(float.IsNaN(settings.steeringSensitivity) ? 1f : settings.steeringSensitivity, 0.6f, 1.4f);
             if (!Enum.IsDefined(typeof(SpeedUnit), settings.units)) settings.units = SpeedUnit.Kmh;
             if (!Enum.IsDefined(typeof(QualityChoice), settings.quality)) settings.quality = QualityChoice.Auto;
+            if (!Enum.IsDefined(typeof(AI.Difficulty), settings.difficulty)) settings.difficulty = AI.Difficulty.Normal;
             foreach (TrackRecord r in records)
             {
                 r.bestStars = Mathf.Clamp(r.bestStars, 0, 3);

@@ -2,6 +2,22 @@ using UnityEngine;
 
 namespace TurboRush.AI
 {
+    public enum Difficulty { Easy = 0, Normal = 1, Hard = 2 }
+
+    /// <summary>How hard the AI races at one difficulty level. Everything stays bounded and deterministic.</summary>
+    [System.Serializable]
+    public struct DifficultyTuning
+    {
+        [Tooltip("Multiplies every AI's skill (fraction of its car's top speed). 1 = the original Turbo Rush field.")]
+        public float skillScale;
+        [Tooltip("Max fraction an AI far ahead of the player slows by.")]
+        [Range(0f, 0.15f)] public float maxSlowdown;
+        [Tooltip("Max fraction an AI far behind the player speeds up by.")]
+        [Range(0f, 0.15f)] public float maxBoost;
+        [Tooltip("Share of power-up rows and boost pads an AI steers for (0..1). Deterministic per racer and row.")]
+        [Range(0f, 1f)] public float seekPowerUps;
+    }
+
     /// <summary>Tuning for AI opponents. Deterministic: no randomness at runtime beyond per-racer fixed phases.</summary>
     [CreateAssetMenu(menuName = "Turbo Rush/AI Profile", fileName = "AIProfile")]
     public sealed class AIProfile : ScriptableObject
@@ -25,12 +41,15 @@ namespace TurboRush.AI
 
         [Header("Catch-up (subtle, bounded)")]
         public bool rubberBand = true;
-        [Tooltip("Max fraction an AI far ahead of the player slows by.")]
-        [Range(0f, 0.15f)] public float maxSlowdown = 0.06f;
-        [Tooltip("Max fraction an AI far behind the player speeds up by.")]
-        [Range(0f, 0.15f)] public float maxBoost = 0.04f;
-        [Tooltip("Gap (metres) at which the full adjustment applies.")]
+        [Tooltip("Gap (metres) at which the full catch-up adjustment applies.")]
         public float fullEffectGap = 180f;
+
+        [Header("Difficulty (chosen by the player on the Tracks screen)")]
+        public DifficultyTuning easy = new DifficultyTuning { skillScale = 1f, maxSlowdown = 0.06f, maxBoost = 0.04f, seekPowerUps = 0.2f };
+        public DifficultyTuning normal = new DifficultyTuning { skillScale = 1.045f, maxSlowdown = 0.03f, maxBoost = 0.05f, seekPowerUps = 0.55f };
+        public DifficultyTuning hard = new DifficultyTuning { skillScale = 1.065f, maxSlowdown = 0f, maxBoost = 0.05f, seekPowerUps = 0.9f };
+
+        public DifficultyTuning For(Difficulty d) => d == Difficulty.Hard ? hard : d == Difficulty.Normal ? normal : easy;
 
         public static AIProfile CreateDefault()
         {

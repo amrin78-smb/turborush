@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.4.0 (versionCode 6) — 2026-11-10, M11: power-ups and difficulty
+- **Power-ups** (drive through them, no button, so the one-finger controls stay):
+  - **Turbo** (yellow lightning bolt): 2.6 s at up to 130 % of top speed, with exhaust flames and a small camera widening.
+  - **Shield** (blue crest): 6 s in a glowing bubble. Bumps and barrier scrapes do not slow you, and a shielded car nudges the car ahead aside.
+  - **Boost pads** (glowing blue strips with yellow chevrons on the road): a 1.3 s burst to 122 %.
+  - Every track has 3 rows of floating power-ups (8 pickups) and 2–3 boost pads at fixed spots, the same in every race (predictable, as the GDD asks).
+  - Pickups are personal: a power-up another car takes is still there for you, so the cars ahead cannot starve the player who starts last.
+- **Difficulty** (Easy / Normal / Hard buttons on the Tracks screen; saved; new and existing saves start on **Normal**):
+  - Easy is the original field.
+  - Normal: AI about 4.5 % faster, weaker catch-up slowdown, and the AI goes for power-ups more often.
+  - Hard: AI about 6.5 % faster, leaders never slow down for you, and the AI goes for most power-ups.
+- HUD chips show the active power-up with a bar that runs down, plus "TURBO!" / "SHIELD!" banners, new sounds and short vibrations.
+  The results screen shows the difficulty.
+- Balance check: a scripted skilled driver races every track at every difficulty (`BalanceEasyIsWinnableAndHardIsHarder`).
+  It wins every track on Easy, places 1st–2nd on Normal (wins 2 of 4 tracks with power-ups) and 1st–4th on Hard (wins 1 of 4).
+  Results: `Docs/validation/balance_report_0.4.0.csv`.
+- Validator: power-ups must be on the lap, clear of the start grid and of every ramp. Tests: 62 EditMode (11 new) + 3 PlayMode.
+
 ## 0.3.2 (versionCode 5) — 2026-11-10: louder engine
 - Owner feedback from the Redmi A3 (0.3.1): plays fine and smoothly, but the engine was too soft.
 - The engine loop was almost all below 300 Hz, which phone speakers barely play. `AudioSynth` now builds it from 12 harmonics with

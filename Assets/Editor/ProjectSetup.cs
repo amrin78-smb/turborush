@@ -40,6 +40,11 @@ namespace TurboRush.EditorTools
                 TrackDefinition[] tracks = TrackDataBuilder.BuildAll();
                 Step("Config", 0.75f);
                 AIProfile ai = EditorAssets.LoadOrCreateSO<AIProfile>("Assets/ScriptableObjects/AI/AIProfile.asset");
+                // The code defaults are the source of truth for AI and race tuning (edit AIProfile.cs / RaceTuning.cs).
+                AIProfile defaults = ScriptableObject.CreateInstance<AIProfile>();
+                EditorUtility.CopySerialized(defaults, ai);
+                UnityEngine.Object.DestroyImmediate(defaults);
+                ai.name = "AIProfile";
                 EditorUtility.SetDirty(ai);
                 GameConfig cfg = EditorAssets.LoadOrCreateSO<GameConfig>(ConfigPath);
                 cfg.cars = cars;
@@ -48,8 +53,8 @@ namespace TurboRush.EditorTools
                 cfg.audio = audio;
                 cfg.ui = skin;
                 cfg.materials = mats;
-                if (cfg.race == null) cfg.race = new Race.RaceTuning();
-                if (cfg.camera == null) cfg.camera = new ChaseCameraSettings();
+                cfg.race = new Race.RaceTuning();
+                cfg.camera = new ChaseCameraSettings();
                 EditorUtility.SetDirty(cfg);
                 AssetDatabase.SaveAssets();
                 Step("Scenes", 0.85f);
@@ -159,7 +164,40 @@ namespace TurboRush.EditorTools
                                 }
                                 if (t.IsTunnel(Mathf.Repeat(lip, path.Length) / path.Length)) errors.Add($"Track {t.id} jump at {j.lapFraction:0.000} is inside a tunnel");
                             }
-                        Debug.Log($"[TR Validate] {t.displayName}: lap {path.Length:0} m × {t.laps} laps, tightest radius {minR:0} m, jumps {(t.jumps != null ? t.jumps.Length : 0)}");
+                        // Power-ups: on the lap, clear of the start grid and of every ramp and its landing.
+                        bool Clear(float frac, string what)
+                        {
+                            if (frac < 0f || frac >= 1f) { errors.Add($"Track {t.id} {what} at {frac:0.000} is outside 0..1"); return false; }
+                            float d = frac * path.Length;
+                            if (d < 20f || d > path.Length - 40f) { errors.Add($"Track {t.id} {what} at {frac:0.000} is too close to the start line"); return false; }
+                            if (t.jumps != null)
+                                foreach (JumpRamp j in t.jumps)
+                                {
+                                    float lip = j.lapFraction * path.Length;
+                                    if (d > lip - j.length - 15f && d < lip + 25f) { errors.Add($"Track {t.id} {what} at {frac:0.000} is on or next to a jump ramp"); return false; }
+                                }
+                            return true;
+                        }
+                        int pickups = 0;
+                        if (t.powerUps != null)
+                            foreach (PowerUpRow r in t.powerUps)
+                            {
+                                Clear(r.lapFraction, "power-up row");
+                                for (int sl = 0; sl < 3; sl++)
+                                {
+                                    PowerUpKind kind = r.Slot(sl);
+                                    if (!Enum.IsDefined(typeof(PowerUpKind), kind)) errors.Add($"Track {t.id} power-up row at {r.lapFraction:0.000} has an unknown kind");
+                                    else if (kind != PowerUpKind.None) pickups++;
+                                }
+                            }
+                        if (t.boostPads != null)
+                            foreach (BoostPad b in t.boostPads)
+                            {
+                                Clear(b.lapFraction, "boost pad");
+                                if (Mathf.Abs(b.lane) > 0.6f) errors.Add($"Track {t.id} boost pad at {b.lapFraction:0.000} must sit on the asphalt (|lane| ≤ 0.6)");
+                            }
+                        Debug.Log($"[TR Validate] {t.displayName}: lap {path.Length:0} m × {t.laps} laps, tightest radius {minR:0} m, jumps {(t.jumps != null ? t.jumps.Length : 0)}, " +
+                                  $"power-ups {pickups} in {(t.powerUps != null ? t.powerUps.Length : 0)} rows, boost pads {(t.boostPads != null ? t.boostPads.Length : 0)}");
                     }
                     catch (Exception e) { errors.Add($"Track {t.id} path error: {e.Message}"); }
                 }
@@ -170,7 +208,8 @@ namespace TurboRush.EditorTools
                 if (cfg.ui == null || cfg.ui.font == null || cfg.ui.rounded == null)
                     errors.Add($"UI skin incomplete (skin={cfg.ui != null}, font={cfg.ui != null && cfg.ui.font != null}, rounded={cfg.ui != null && cfg.ui.rounded != null})");
                 else for (int i = 0; i < (int)Icon.Count; i++) if (cfg.ui.Get((Icon)i) == null) errors.Add("Missing icon " + (Icon)i);
-                if (cfg.materials == null || cfg.materials.vertexLit == null || cfg.materials.road == null || cfg.materials.sky == null || cfg.materials.blobShadow == null)
+                if (cfg.materials == null || cfg.materials.vertexLit == null || cfg.materials.road == null || cfg.materials.sky == null || cfg.materials.blobShadow == null
+                    || cfg.materials.glow == null || cfg.materials.bubble == null)
                     errors.Add("Race materials incomplete");
                 if (cfg.ai == null) errors.Add("AI profile missing");
                 if (cfg.race.racerCount < 2 || cfg.race.racerCount > 8) errors.Add("racerCount must be 2..8");

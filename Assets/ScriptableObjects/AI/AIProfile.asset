@@ -32,6 +32,19 @@ MonoBehaviour:
   steerGain: 0.55
   steerDamping: 0.12
   rubberBand: 1
-  maxSlowdown: 0.06
-  maxBoost: 0.04
   fullEffectGap: 180
+  easy:
+    skillScale: 1
+    maxSlowdown: 0.06
+    maxBoost: 0.04
+    seekPowerUps: 0.2
+  normal:
+    skillScale: 1.045
+    maxSlowdown: 0.03
+    maxBoost: 0.05
+    seekPowerUps: 0.55
+  hard:
+    skillScale: 1.065
+    maxSlowdown: 0
+    maxBoost: 0.05
+    seekPowerUps: 0.9

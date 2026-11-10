@@ -38,6 +38,10 @@ namespace TurboRush.EditorTools
             sfx[(int)Sfx.Star] = Save(SfxDir + "star.wav", Notes(new[] { 1568f }, 0.35f, 0.4f), false);
             sfx[(int)Sfx.Jump] = Save(SfxDir + "jump.wav", Tone(0.32f, 330f, 520f, 0.32f, 0.01f, 0.18f), false);
             sfx[(int)Sfx.Land] = Save(SfxDir + "land.wav", Thump(0.26f, 80f, 0.6f), false);
+            sfx[(int)Sfx.Turbo] = Save(SfxDir + "turbo.wav", Whoosh(0.75f, 260f, 980f, 0.5f), false);
+            sfx[(int)Sfx.Shield] = Save(SfxDir + "shield.wav", Notes(new[] { 784f, 1047f, 1319f, 1568f }, 0.06f, 0.32f, 0.45f), false);
+            sfx[(int)Sfx.BoostPad] = Save(SfxDir + "boost_pad.wav", Whoosh(0.4f, 420f, 900f, 0.4f), false);
+            sfx[(int)Sfx.ShieldBlock] = Save(SfxDir + "shield_block.wav", Tone(0.25f, 520f, -260f, 0.35f, 0.004f, 0.18f), false);
             lib.sfx = sfx;
             lib.menuMusic = Save(MusicDir + "menu_music.wav", Music(118f, 16, false), true, true);
             lib.raceMusic = Save(MusicDir + "race_music.wav", Music(138f, 16, true), true, true);
@@ -127,6 +131,26 @@ namespace TurboRush.EditorTools
                 ph += 2 * Math.PI * (f * (1f - t * 1.5f)) / Rate;
                 float noise = (float)(rng.NextDouble() * 2 - 1) * Mathf.Exp(-t * 60f) * 0.4f;
                 d[i] = ((float)Math.Sin(ph) * Mathf.Exp(-t * 14f) + noise) * vol;
+            }
+            return d;
+        }
+
+        /// <summary>Rising "whoosh": soft filtered noise plus a tone sweeping f0 → f1 (turbo and boost pads).</summary>
+        private static float[] Whoosh(float len, float f0, float f1, float vol)
+        {
+            int n = (int)(len * Rate);
+            var d = new float[n];
+            var rng = new System.Random(21);
+            float lp = 0f;
+            double ph = 0;
+            for (int i = 0; i < n; i++)
+            {
+                float t = i / (float)Rate, u = t / len;
+                lp += ((float)(rng.NextDouble() * 2 - 1) - lp) * Mathf.Lerp(0.05f, 0.3f, u);
+                float f = Mathf.Lerp(f0, f1, u * u * (3f - 2f * u));
+                ph += 2 * Math.PI * f / Rate;
+                float tone = (float)(Math.Sin(ph) * 0.6 + Math.Sin(2 * ph) * 0.25);
+                d[i] = (lp * 0.9f + tone * 0.55f) * vol * Env(t, len, 0.03f, len * 0.55f);
             }
             return d;
         }

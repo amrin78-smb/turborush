@@ -72,7 +72,7 @@ namespace TurboRush.CameraRig
             }
 
             float speed01 = Mathf.Clamp01(p.Speed / Mathf.Max(1f, p.Tuning.MaxSpeed));
-            float fov = m_S.fov + m_S.speedFov * speed01 * speed01;
+            float fov = m_S.fov + m_S.speedFov * speed01 * speed01 + (p.Boosting ? m_S.boostFov : 0f);
             m_Cam.fieldOfView = Mathf.MoveTowards(m_Cam.fieldOfView, fov, 8f * dt);
         }
     }

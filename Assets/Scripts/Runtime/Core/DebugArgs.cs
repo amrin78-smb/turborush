@@ -11,6 +11,7 @@ namespace TurboRush.Core
     ///  -tr-safe-inset &lt;px&gt;     simulate a notch/rounded corners (left/right/top insets)
     ///  -tr-track &lt;id&gt;          track for the autopilot race
     ///  -tr-fast                shorten the autopilot race (teleport near the finish)
+    ///  -tr-difficulty &lt;level&gt;  Easy|Normal|Hard for the race (test players only)
     /// </summary>
     public static class DebugArgs
     {
@@ -21,6 +22,8 @@ namespace TurboRush.Core
         public static string Tag { get; private set; } = "";
         /// <summary>-tr-quality Low|Medium|High overrides the saved quality choice (test players only).</summary>
         public static Save.QualityChoice? Quality { get; private set; }
+        /// <summary>-tr-difficulty Easy|Normal|Hard overrides the saved difficulty (test players only).</summary>
+        public static AI.Difficulty? Difficulty { get; private set; }
 
         public static void Apply()
         {
@@ -38,6 +41,9 @@ namespace TurboRush.Core
                     case "-tr-tag": Tag = next; break;
                     case "-tr-quality":
                         if (System.Enum.TryParse(next, true, out Save.QualityChoice q)) Quality = q;
+                        break;
+                    case "-tr-difficulty":
+                        if (System.Enum.TryParse(next, true, out AI.Difficulty d)) Difficulty = d;
                         break;
                     case "-tr-safe-inset":
                         if (float.TryParse(next, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float px))

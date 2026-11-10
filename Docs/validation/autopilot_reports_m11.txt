@@ -1,0 +1,83 @@
+Turbo Rush 3D autopilot  2026-11-10 23:20:49  screen 1920x1080  aspect 1.778  match=1  safe-inset=(0.00, 0.00, 0.00, 0.00)
+PASS menu scene loaded
+PASS state MainMenu
+PASS state VehicleSelect
+PASS state TrackSelect
+PASS race scene loaded (Hilltop Hops)
+PASS state Countdown
+PASS no progress during countdown
+PASS state Racing after GO
+PASS state Paused
+PASS pause freezes clock and progress
+PASS resume returns to Racing
+Jumps: 4 take-offs, 4 landings, longest air time 0.78s, max height 1.45 m
+PASS player jumped and landed safely
+Difficulty Normal; player power-ups 3, boost pads 4; AI power-ups 23
+PASS player collected power-ups
+Race wall time 76.2s, sim clock 72.0s, frames 734, avg FPS 9.6, worst frame 126ms (desktop xvfb software GL: NOT representative of phones)
+PASS player finished → Finishing
+PASS finish time recorded (71.93s, place 1, respawns 0)
+PASS state Results
+AI finished by results screen: 4/5
+PASS restart resets race to countdown
+PASS no duplicate race managers
+PASS results screen removed on restart
+PASS racing again after restart
+PASS back at MainMenu
+PASS single Services instance
+PASS no errors/exceptions logged (0)
+RESULT: PASS
+Turbo Rush 3D autopilot  2026-11-10 23:25:48  screen 2400x1080  aspect 2.222  match=1  safe-inset=(90.00, 90.00, 45.00, 0.00)
+PASS menu scene loaded
+PASS state MainMenu
+PASS state VehicleSelect
+PASS state TrackSelect
+PASS race scene loaded (Skyway Circuit)
+PASS state Countdown
+PASS no progress during countdown
+PASS state Racing after GO
+PASS state Paused
+PASS pause freezes clock and progress
+PASS resume returns to Racing
+Difficulty Hard; player power-ups 5, boost pads 5; AI power-ups 31
+PASS player collected power-ups
+Race wall time 114.5s, sim clock 76.2s, frames 761, avg FPS 6.6, worst frame 194ms (desktop xvfb software GL: NOT representative of phones)
+PASS player finished → Finishing
+PASS finish time recorded (76.20s, place 4, respawns 0)
+PASS state Results
+AI finished by results screen: 4/5
+PASS restart resets race to countdown
+PASS no duplicate race managers
+PASS results screen removed on restart
+PASS racing again after restart
+PASS back at MainMenu
+PASS single Services instance
+PASS no errors/exceptions logged (0)
+RESULT: PASS
+Turbo Rush 3D autopilot  2026-11-10 23:28:08  screen 2048x1536  aspect 1.333  match=0  safe-inset=(0.00, 0.00, 0.00, 0.00)
+PASS menu scene loaded
+PASS state MainMenu
+PASS state VehicleSelect
+PASS state TrackSelect
+PASS race scene loaded (Coastal Loop)
+PASS state Countdown
+PASS no progress during countdown
+PASS state Racing after GO
+PASS state Paused
+PASS pause freezes clock and progress
+PASS resume returns to Racing
+Difficulty Easy; player power-ups 4, boost pads 5; AI power-ups 25
+PASS player collected power-ups
+Race wall time 117.7s, sim clock 67.1s, frames 670, avg FPS 5.7, worst frame 220ms (desktop xvfb software GL: NOT representative of phones)
+PASS player finished → Finishing
+PASS finish time recorded (67.10s, place 1, respawns 0)
+PASS state Results
+AI finished by results screen: 1/5
+PASS restart resets race to countdown
+PASS no duplicate race managers
+PASS results screen removed on restart
+PASS racing again after restart
+PASS back at MainMenu
+PASS single Services instance
+PASS no errors/exceptions logged (0)
+RESULT: PASS

@@ -38,6 +38,8 @@ namespace TurboRush.Race
 
         private Services m_Services;
         private RacerView[] m_Views;
+        private RacerEffects[] m_Effects;
+        private PowerUpView m_PowerUps;
         private float m_Countdown;
         private int m_LastCount;
         private float m_FinishTimer;
@@ -76,16 +78,21 @@ namespace TurboRush.Race
                 RacerCars[i] = c;
             }
             for (int i = 0; i < n; i++) tunings[i] = RacerCars[i].tuning;
-            Sim = new RaceSimulation(raceTrack, cfg.race, cfg.ai != null ? cfg.ai : AI.AIProfile.CreateDefault(), tunings, 0);
+            Sim = new RaceSimulation(raceTrack, cfg.race, cfg.ai != null ? cfg.ai : AI.AIProfile.CreateDefault(), tunings, 0, DebugArgs.Difficulty ?? m_Services.Settings.difficulty);
 
             var cars = new GameObject("Racers").transform;
             m_Views = new RacerView[n];
+            m_Effects = new RacerEffects[n];
             for (int i = 0; i < n; i++)
             {
                 GameObject go = Instantiate(RacerCars[i].prefab, cars);
                 go.name = (i == 0 ? "Player_" : "AI_") + RacerCars[i].displayName;
                 m_Views[i] = go.GetComponent<RacerView>();
+                m_Effects[i] = go.AddComponent<RacerEffects>();
+                m_Effects[i].Init(cfg.materials, go.GetComponentsInChildren<Renderer>(), i);
             }
+            m_PowerUps = new GameObject("PowerUps").AddComponent<PowerUpView>();
+            m_PowerUps.Init(Sim, cfg.materials);
 
             Sim.RacerFinished += OnRacerFinished;
             Sim.PlayerPositionChanged += OnPositionChanged;
@@ -96,6 +103,9 @@ namespace TurboRush.Race
             Sim.Respawned += OnRespawned;
             Sim.PlayerTookOff += OnTookOff;
             Sim.PlayerLanded += OnLanded;
+            Sim.PowerUpCollected += OnPowerUp;
+            Sim.PlayerBoostPad += OnBoostPad;
+            Sim.PlayerShieldBlock += OnShieldBlock;
 
             m_Camera.Init(Sim, cfg.camera, q.farClip);
             UI = gameObject.AddComponent<RaceUI>();
@@ -123,6 +133,9 @@ namespace TurboRush.Race
                 Sim.Respawned -= OnRespawned;
                 Sim.PlayerTookOff -= OnTookOff;
                 Sim.PlayerLanded -= OnLanded;
+                Sim.PowerUpCollected -= OnPowerUp;
+                Sim.PlayerBoostPad -= OnBoostPad;
+                Sim.PlayerShieldBlock -= OnShieldBlock;
             }
             if (m_Services != null)
             {
@@ -238,7 +251,11 @@ namespace TurboRush.Race
         private void LateUpdate()
         {
             float dt = State == GameState.Paused ? 0f : Time.deltaTime;
-            for (int i = 0; i < m_Views.Length; i++) m_Views[i].Apply(Sim, Sim.Racers[i], dt, m_Snap);
+            for (int i = 0; i < m_Views.Length; i++)
+            {
+                m_Views[i].Apply(Sim, Sim.Racers[i], dt, m_Snap);
+                m_Effects[i].Apply(Sim.Racers[i], dt);
+            }
             m_Snap = false;
         }
 
@@ -311,6 +328,26 @@ namespace TurboRush.Race
             m_Services.Audio.Play(Sfx.Land, Mathf.Clamp(airTime, 0.35f, 0.8f));
             Haptics.Pulse(35);
             if (airTime >= 0.4f && State == GameState.Racing) UI.ShowJump();
+        }
+
+        private void OnPowerUp(int racer, int slot)
+        {
+            if (racer != Sim.PlayerIndex) return;
+            PowerUpKind kind = Sim.PowerUps.Kind[slot];
+            m_Services.Audio.Play(kind == PowerUpKind.Turbo ? Sfx.Turbo : Sfx.Shield, 0.9f);
+            Haptics.Pulse(kind == PowerUpKind.Turbo ? 40 : 25);
+            if (State == GameState.Racing) UI.ShowPowerUp(kind);
+        }
+
+        private void OnBoostPad()
+        {
+            m_Services.Audio.Play(Sfx.BoostPad, 0.8f);
+            Haptics.Pulse(20);
+        }
+
+        private void OnShieldBlock()
+        {
+            m_Services.Audio.Play(Sfx.ShieldBlock, 0.8f);
         }
 
         private void OnRespawned(int index)

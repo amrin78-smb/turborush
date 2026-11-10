@@ -52,6 +52,26 @@ MonoBehaviour:
   jumps: []
   sea: 1
   seaLevel: -1.5
+  powerUps:
+  - lapFraction: 0.13
+    left: 1
+    centre: 2
+    right: 1
+  - lapFraction: 0.52
+    left: 2
+    centre: 1
+    right: 2
+  - lapFraction: 0.94
+    left: 1
+    centre: 0
+    right: 1
+  boostPads:
+  - lapFraction: 0.05
+    lane: -0.4
+  - lapFraction: 0.56
+    lane: 0.4
+  - lapFraction: 0.67
+    lane: 0
   seed: 37
   treeCount: 140
   rockCount: 26

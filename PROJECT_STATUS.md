@@ -1,6 +1,6 @@
 # Turbo Rush 3D: project status
 
-_Last updated: 2026-11-10. Version 0.3.2 (versionCode 5): louder engine sound. 0.3.1: app icon and splash logo. 0.3.0: M7 proper 3D car models. Earlier: 0.2.0 (M9), 0.1.0 (RC)._
+_Last updated: 2026-11-10. Version 0.4.0 (versionCode 6): power-ups and difficulty levels. 0.3.2: louder engine sound. 0.3.1: app icon and splash logo. 0.3.0: M7 proper 3D car models. Earlier: 0.2.0 (M9), 0.1.0 (RC)._
 
 Owner feedback 2026-11-10: "It plays well"; on 0.3.1: "works fine, very smooth play", engine too soft (fixed in 0.3.2). Informal reports: the Redmi A3 checklist below (FPS, thermals, relaunch) has not been filled in yet.
 
@@ -88,4 +88,5 @@ because Unity's deny list makes PowerVR devices skip Vulkan and fall through to 
 | M7: Proper car models | 8 original Blender models (`Art/Cars/`): Blaze, Zoom, Sunny, Mint by Kimi; Grape, Tango, Frost, Bolt by Claude (`Tools/Blender/`). `CarBuilder` converts the FBX material slots into vertex colour, paint mask and emission (one material per car), corrects the importer's axes from the wheel names, and builds prefabs with spinning and steering wheels and a LODGroup (LOD1 for distant cars). All 8 pass `Tools/Blender/check_car_fbx.py` and `CarModelTests`. | **Done** in 0.3.0; on-device look and FPS pending |
 | M8: Device validation and performance | Fill in `Docs/REDMI_A3_TEST_CHECKLIST.md` with measured FPS and thermals, and tune the Low preset | Needs the owner's Redmi A3 |
 | M9: More content | GDD "later content": slopes and gentle jumps, plus a 4th track (Hilltop Hops) | **Done** in 0.2.0; device feel pending. Correction: the 0.2.0 record of 46/46 EditMode tests came from a run before the sub-step change; one test (`ShippedJumpsAreOnStraightsAndAITakesThemCleanly`) then failed because it stepped at 1/30 s and missed the one-sub-step landing flag. Fixed in 0.3.0 (test-only; game events were correct). |
+| M11: Power-ups and difficulty | Turbo, Shield, boost pads (fixed placements, personal pickups); Easy / Normal / Hard (default Normal); balance checked with a scripted driver | **Done** in 0.4.0; on-device feel and FPS pending |
 | M10: Polish | Better engine and music audio, a release keystore and store-ready signing | Not started |

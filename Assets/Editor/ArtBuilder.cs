@@ -40,7 +40,13 @@ namespace TurboRush.EditorTools
             m.blobShadow.SetFloat("_Strength", 0.55f);
             m.carBase = EditorAssets.Material(Mat + "TR_CarBase.mat", VertexLit);
             m.carBase.SetFloat("_Gloss", 0.55f);
-            foreach (Material mat in new[] { m.vertexLit, m.road, m.water, m.sky, m.blobShadow, m.carBase }) EditorUtility.SetDirty(mat);
+            m.glow = EditorAssets.Material(Mat + "TR_Glow.mat", Find("TurboRush/Glow"));
+            m.glow.SetColor("_Color", Color.white);
+            m.glow.SetFloat("_Rim", 0f);
+            m.bubble = EditorAssets.Material(Mat + "TR_Bubble.mat", Find("TurboRush/Glow"));
+            m.bubble.SetColor("_Color", new Color(1f, 1f, 1f, 0.85f)); // tint comes from vertex colours
+            m.bubble.SetFloat("_Rim", 1f);
+            foreach (Material mat in new[] { m.vertexLit, m.road, m.water, m.sky, m.blobShadow, m.carBase, m.glow, m.bubble }) EditorUtility.SetDirty(mat);
             return m;
         }
 

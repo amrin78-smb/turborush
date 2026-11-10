@@ -31,5 +31,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 84b79e687de36bf02a03aa93998c592c, type: 3}
   - {fileID: 8300000, guid: 1fb5469ea5f46a998a51c056e9aed19c, type: 3}
   - {fileID: 8300000, guid: 92f8f222553b0e567b09e687ce743675, type: 3}
+  - {fileID: 8300000, guid: 6e489e20a2beff7648789aa58dbaffc6, type: 3}
+  - {fileID: 8300000, guid: 156b36b37f5cf3b8182262ad812c8d0b, type: 3}
+  - {fileID: 8300000, guid: 22ac91c33d4bcbf579e4d1d705d422b8, type: 3}
+  - {fileID: 8300000, guid: 1ee038cf997c0e9bf86257cdfe0bc94e, type: 3}
   raceMusicVolume: 0.35
   engineVolume: 0.7

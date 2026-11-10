@@ -42,6 +42,7 @@ namespace TurboRush.Track
             BuildStartGantry(def, path, deco);
             BuildCheckpointFlags(def, path, deco);
             BuildJumps(def, path, deco);
+            BuildBoostPads(def, path, deco);
             Emit(root.transform, "Landmarks", road, deco, mats);
             return root;
         }
@@ -319,6 +320,42 @@ namespace TurboRush.Track
                     // Back of the board, so it is not invisible from behind.
                     k.Quad(c - r - back * 0.5f, c - u - back * 0.5f, c + r - back * 0.5f, c + u - back * 0.5f, Color.Lerp(Color.white, yellow, 0.3f) * 0.8f);
                 }
+            }
+        }
+
+        /// <summary>Boost pads: a dark plate with a glowing cyan border and three glowing chevrons pointing the way.</summary>
+        private static void BuildBoostPads(TrackDefinition def, TrackPath path, MeshKit k)
+        {
+            if (def.boostPads == null) return;
+            Color plate = new Color(0.1f, 0.3f, 0.75f), edge = new Color(0.35f, 0.95f, 1f), chevron = new Color(1f, 0.85f, 0.2f);
+            const float L = BoostPad.Length, W = BoostPad.HalfWidth;
+            foreach (BoostPad b in def.boostPads)
+            {
+                float start = b.lapFraction * path.Length, lat = Mathf.Clamp(b.lane, -1f, 1f) * def.roadHalfWidth;
+                Vector3 At(float x, float side, float lift)
+                {
+                    path.Sample(start + x, out TrackSample s);
+                    return P(s, lat + side, lift);
+                }
+                const int steps = 6;
+                for (int i = 0; i < steps; i++)
+                {
+                    float x0 = L * i / steps, x1 = L * (i + 1) / steps;
+                    k.Emission = 0.35f;
+                    k.Quad(At(x0, -W, 0.035f), At(x1, -W, 0.035f), At(x1, W, 0.035f), At(x0, W, 0.035f), plate);
+                    k.Emission = 1f;
+                    k.Quad(At(x0, -W, 0.045f), At(x1, -W, 0.045f), At(x1, -W + 0.32f, 0.045f), At(x0, -W + 0.32f, 0.045f), edge);
+                    k.Quad(At(x0, W - 0.32f, 0.045f), At(x1, W - 0.32f, 0.045f), At(x1, W, 0.045f), At(x0, W, 0.045f), edge);
+                }
+                k.Emission = 1f;
+                for (int c = 0; c < 3; c++)
+                {
+                    // Each chevron is two slanted bars meeting at the tip, on the centre line of the pad.
+                    float x = 1.0f + c * 2.7f, tip = x + 2.0f, arm = 0.85f, w = W - 0.4f;
+                    k.Quad(At(x, -w, 0.055f), At(tip, 0f, 0.055f), At(tip - arm, 0f, 0.055f), At(x - arm, -w, 0.055f), chevron);
+                    k.Quad(At(tip - arm, 0f, 0.055f), At(tip, 0f, 0.055f), At(x, w, 0.055f), At(x - arm, w, 0.055f), chevron);
+                }
+                k.Emission = 0f;
             }
         }
 

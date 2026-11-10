@@ -42,6 +42,8 @@ namespace TurboRush.EditorTools
                 new Vector3(0, 0, -118)
             };
             t.laps = 2;
+            t.powerUps = new[] { new PowerUpRow(0.06f, PowerUpKind.Turbo, PowerUpKind.Shield, PowerUpKind.Turbo), new PowerUpRow(0.52f, PowerUpKind.Shield, PowerUpKind.Turbo, PowerUpKind.Shield), new PowerUpRow(0.79f, PowerUpKind.Turbo, PowerUpKind.None, PowerUpKind.Turbo) };
+            t.boostPads = new[] { new BoostPad(0.035f, -0.45f), new BoostPad(0.50f, 0.45f), new BoostPad(0.95f, 0f) };
             t.autoBankFactor = 5f;
             t.maxBank = 8f;
             t.roadHalfWidth = 7.5f;
@@ -83,6 +85,8 @@ namespace TurboRush.EditorTools
                 new Vector3(242, 4, -222), new Vector3(122, 3, -202), new Vector3(42, 1, -142), new Vector3(0, 0, -88)
             };
             t.laps = 2;
+            t.powerUps = new[] { new PowerUpRow(0.05f, PowerUpKind.Turbo, PowerUpKind.Shield, PowerUpKind.Turbo), new PowerUpRow(0.34f, PowerUpKind.Shield, PowerUpKind.Turbo, PowerUpKind.Shield), new PowerUpRow(0.78f, PowerUpKind.Turbo, PowerUpKind.None, PowerUpKind.Turbo) };
+            t.boostPads = new[] { new BoostPad(0.08f, 0.4f), new BoostPad(0.58f, -0.4f), new BoostPad(0.88f, 0f) };
             t.autoBankFactor = 9f;
             t.maxBank = 13f;
             t.roadHalfWidth = 7.5f;
@@ -134,6 +138,8 @@ namespace TurboRush.EditorTools
                 new Vector3(-85, 1.5f, -160), new Vector3(-15, 1, -155), new Vector3(12, 1, -85)
             };
             t.laps = 2;
+            t.powerUps = new[] { new PowerUpRow(0.13f, PowerUpKind.Turbo, PowerUpKind.Shield, PowerUpKind.Turbo), new PowerUpRow(0.52f, PowerUpKind.Shield, PowerUpKind.Turbo, PowerUpKind.Shield), new PowerUpRow(0.94f, PowerUpKind.Turbo, PowerUpKind.None, PowerUpKind.Turbo) };
+            t.boostPads = new[] { new BoostPad(0.05f, -0.4f), new BoostPad(0.56f, 0.4f), new BoostPad(0.67f, 0f) };
             t.autoBankFactor = 6f;
             t.maxBank = 9f;
             t.roadHalfWidth = 7.5f;
@@ -189,6 +195,8 @@ namespace TurboRush.EditorTools
                 new Vector3(240, 17, -170), new Vector3(175, 15, -210), new Vector3(105, 12, -195), new Vector3(48, 6, -155), new Vector3(8, 1, -80)
             };
             t.laps = 2;
+            t.powerUps = new[] { new PowerUpRow(0.05f, PowerUpKind.Turbo, PowerUpKind.Shield, PowerUpKind.Turbo), new PowerUpRow(0.30f, PowerUpKind.Shield, PowerUpKind.Turbo, PowerUpKind.Shield), new PowerUpRow(0.95f, PowerUpKind.Turbo, PowerUpKind.None, PowerUpKind.Turbo) };
+            t.boostPads = new[] { new BoostPad(0.48f, 0f), new BoostPad(0.85f, 0.4f) };
             t.autoBankFactor = 6f;
             t.maxBank = 9f;
             t.roadHalfWidth = 7.5f;

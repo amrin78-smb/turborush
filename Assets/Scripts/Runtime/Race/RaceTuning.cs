@@ -63,6 +63,24 @@ namespace TurboRush.Race
         [Tooltip("Cars more than this far apart vertically do not collide (one is flying over the other).")]
         public float contactHeight = 0.9f;
 
+        [Header("Power-ups")]
+        [Tooltip("Turbo power-up: seconds of extra speed.")]
+        public float turboSeconds = 2.6f;
+        [Tooltip("Turbo power-up: target speed as a multiple of top speed.")]
+        public float turboSpeedFactor = 1.3f;
+        [Tooltip("Boost pad: seconds of extra speed.")]
+        public float padSeconds = 1.3f;
+        [Tooltip("Boost pad: target speed as a multiple of top speed.")]
+        public float padSpeedFactor = 1.22f;
+        [Tooltip("Acceleration while a turbo or pad boost is active (m/s²).")]
+        public float boostAcceleration = 24f;
+        [Tooltip("Shield power-up: seconds during which bumps and barrier scrapes do not slow the car.")]
+        public float shieldSeconds = 6f;
+        [Tooltip("Seconds before a collected power-up appears again.")]
+        public float pickupRespawnSeconds = 4f;
+        [Tooltip("A car collects a power-up when its centre passes within this many metres sideways.")]
+        public float pickupReach = 1.7f;
+
         [Header("Collisions")]
         [Tooltip("Speed the rear car keeps relative to the front car after a bump.")]
         public float bumpSpeedKeep = 0.94f;

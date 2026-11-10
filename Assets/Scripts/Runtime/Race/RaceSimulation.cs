@@ -21,9 +21,14 @@ namespace TurboRush.Race
         private readonly float[] m_JumpStart;  // lap distance where each ramp begins
         private readonly float[] m_JumpLength;
         private readonly float[] m_JumpHeight;
+        public readonly PowerUpRow[] PowerUpRows;
+        public readonly BoostPad[] BoostPads;
 
-        public RaceTrack(TrackPath path, float halfWidth, float shoulderWidth, float runoffWidth, int laps, int checkpointsPerLap, LapRange[] openRunoff = null, JumpRamp[] jumps = null)
+        public RaceTrack(TrackPath path, float halfWidth, float shoulderWidth, float runoffWidth, int laps, int checkpointsPerLap, LapRange[] openRunoff = null, JumpRamp[] jumps = null,
+                         PowerUpRow[] powerUps = null, BoostPad[] boostPads = null)
         {
+            PowerUpRows = powerUps ?? Array.Empty<PowerUpRow>();
+            BoostPads = boostPads ?? Array.Empty<BoostPad>();
             Path = path;
             HalfWidth = halfWidth;
             ShoulderWidth = shoulderWidth;
@@ -45,7 +50,7 @@ namespace TurboRush.Race
 
         public static RaceTrack From(TrackDefinition def, TrackPath path = null)
         {
-            return new RaceTrack(path ?? def.BuildPath(), def.roadHalfWidth, def.shoulderWidth, def.runoffWidth, def.laps, def.checkpointsPerLap, def.openRunoff, def.jumps);
+            return new RaceTrack(path ?? def.BuildPath(), def.roadHalfWidth, def.shoulderWidth, def.runoffWidth, def.laps, def.checkpointsPerLap, def.openRunoff, def.jumps, def.powerUps, def.boostPads);
         }
 
         public int JumpCount => m_JumpStart.Length;
@@ -111,6 +116,15 @@ namespace TurboRush.Race
         public float Steer;             // smoothed steering −1..1
         public SurfaceZone Zone;
 
+        // Power-ups
+        public float TurboTimer;        // seconds of turbo left
+        public float PadTimer;          // seconds of boost-pad burst left
+        public float ShieldTimer;       // seconds of shield left
+        public int PowerUpsCollected;
+        public int PadsHit;
+        public bool Boosting => TurboTimer > 0f || PadTimer > 0f;
+        public bool Shielded => ShieldTimer > 0f;
+
         public bool Finished;
         public float FinishTime;
         public int FinishOrder;
@@ -166,15 +180,25 @@ namespace TurboRush.Race
         public event Action<int> PlayerBumped;               // other racer index
         public event Action PlayerTookOff;
         public event Action<float> PlayerLanded;             // air time in seconds
+        public event Action<int, int> PowerUpCollected;      // racer index, pickup slot
+        public event Action PlayerBoostPad;
+        public event Action PlayerShieldBlock;               // the shield saved the player from a bump or a scrape
+
+        public readonly PowerUpField PowerUps;
+        public readonly Difficulty Difficulty;
+        private readonly DifficultyTuning m_Diff;
 
         private float m_PlayerBumpCooldown;
         private float m_PlayerBarrierCooldown;
 
-        public RaceSimulation(RaceTrack track, RaceTuning tuning, AIProfile ai, CarTuning[] cars, int playerIndex)
+        public RaceSimulation(RaceTrack track, RaceTuning tuning, AIProfile ai, CarTuning[] cars, int playerIndex, Difficulty difficulty = Difficulty.Easy)
         {
             Track = track;
             Tuning = tuning;
             AI = ai;
+            Difficulty = difficulty;
+            m_Diff = ai.For(difficulty);
+            PowerUps = new PowerUpField(track, tuning, track.PowerUpRows, track.BoostPads, cars.Length);
             int n = cars.Length;
             Racers = new RacerState[n];
             Order = new int[n];
@@ -193,6 +217,7 @@ namespace TurboRush.Race
             FinishedCount = 0;
             m_PlayerBumpCooldown = 0f;
             m_PlayerBarrierCooldown = 0f;
+            PowerUps.Reset();
             int n = Racers.Length;
             int playerSlot = Mathf.Clamp(Tuning.playerGridSlot, 0, n - 1);
             int aiSlot = 0, aiCount = 0;
@@ -227,12 +252,14 @@ namespace TurboRush.Race
                 r.StuckTimer = 0f;
                 r.GhostTimer = 0f;
                 r.RespawnCount = 0;
+                r.TurboTimer = r.PadTimer = r.ShieldTimer = 0f;
+                r.PowerUpsCollected = r.PadsHit = 0;
                 r.Autopilot = !r.IsPlayer;
                 r.LaneCooldown = 0f;
                 if (!r.IsPlayer)
                 {
                     float[] skills = AI.skill;
-                    r.Skill = skills.Length > 0 ? skills[aiCount % skills.Length] : 0.92f;
+                    r.Skill = (skills.Length > 0 ? skills[aiCount % skills.Length] : 0.92f) * m_Diff.skillScale;
                     r.Phase = aiCount * 1.7f;
                     r.LaneIndex = NearestLane(r.Lateral);
                     aiCount++;
@@ -264,10 +291,13 @@ namespace TurboRush.Race
             m_PlayerBumpCooldown -= dt;
             m_PlayerBarrierCooldown -= dt;
             RacerState player = Player;
+            PowerUps.Tick(dt);
 
             for (int i = 0; i < Racers.Length; i++)
             {
                 RacerState r = Racers[i];
+                float prevDistance = r.Distance;
+                bool wasShielded = r.Shielded;
                 float steer, target;
                 if (r.Autopilot) AIControl(r, player, out steer, out target);
                 else { steer = playerSteer; target = r.Tuning.MaxSpeed; }
@@ -277,7 +307,11 @@ namespace TurboRush.Race
                 {
                     m_PlayerBarrierCooldown = 0.6f;
                     PlayerHitBarrier?.Invoke(impact);
+                    if (wasShielded) PlayerShieldBlock?.Invoke();
                 }
+                int slot = PowerUps.Collect(r, prevDistance, out bool pad);
+                if (slot >= 0) PowerUpCollected?.Invoke(r.Index, slot);
+                if (pad && r.IsPlayer) PlayerBoostPad?.Invoke();
                 if (r.IsPlayer)
                 {
                     if (r.TookOff) PlayerTookOff?.Invoke();
@@ -297,6 +331,9 @@ namespace TurboRush.Race
             AIProfile ai = AI;
             float hw = Track.HalfWidth;
             float laneTarget = ai.lanes.Length > 0 ? ai.lanes[Mathf.Clamp(r.LaneIndex, 0, ai.lanes.Length - 1)] * hw : 0f;
+            // Go for a power-up or boost pad ahead (how often depends on the difficulty).
+            bool seeking = PowerUps.Seek(r, r.IsPlayer ? 0f : m_Diff.seekPowerUps, out float seekLateral);
+            if (seeking) laneTarget = seekLateral;
 
             // Look for a slower car ahead in our lane.
             float blockerSpeed = float.MaxValue;
@@ -313,7 +350,7 @@ namespace TurboRush.Race
                 }
             }
 
-            if (blocked && r.LaneCooldown <= 0f && ai.lanes.Length > 1)
+            if (blocked && !seeking && r.LaneCooldown <= 0f && ai.lanes.Length > 1)
             {
                 // Deterministic preference: even racers try left first, odd try right first.
                 int first = r.Index % 2 == 0 ? -1 : 1;
@@ -339,7 +376,7 @@ namespace TurboRush.Race
             {
                 float gap = r.Distance - player.Distance;
                 float k = Mathf.Clamp01(Mathf.Abs(gap) / Mathf.Max(1f, ai.fullEffectGap));
-                band = gap > 0f ? 1f - ai.maxSlowdown * k : 1f + ai.maxBoost * k;
+                band = gap > 0f ? 1f - m_Diff.maxSlowdown * k : 1f + m_Diff.maxBoost * k;
             }
             target = r.Tuning.MaxSpeed * skill * wobble * band;
             if (blocked) target = Mathf.Min(target, Mathf.Max(blockerSpeed - 0.5f, r.Tuning.MaxSpeed * 0.5f));
@@ -417,6 +454,7 @@ namespace TurboRush.Race
             r.OutsideTimer = 0f;
             r.StuckTimer = 0f;
             r.GhostTimer = Tuning.respawnGhostSeconds;
+            r.TurboTimer = r.PadTimer = 0f;
             r.RespawnCount++;
             if (!r.IsPlayer) r.LaneIndex = NearestLane(r.Lateral);
             Respawned?.Invoke(r.Index);
@@ -451,14 +489,23 @@ namespace TurboRush.Race
                     RacerState front = dd >= 0f ? a : b;
                     RacerState rear = dd >= 0f ? b : a;
                     float latDir = Mathf.Abs(dl) > 0.01f ? Mathf.Sign(front.Lateral - rear.Lateral) : (front.Index < rear.Index ? 1f : -1f);
+                    bool frontShield = front.Shielded && !rear.Shielded, rearShield = rear.Shielded && !front.Shielded;
                     if (Mathf.Abs(dd) < len * 0.6f)
                     {
-                        // Side by side: push apart sideways.
+                        // Side by side: push apart sideways. A shielded car holds its line and the other car moves.
                         float overlap = (wid - Mathf.Abs(dl)) * 0.5f;
-                        front.Lateral += latDir * overlap;
-                        rear.Lateral -= latDir * overlap;
-                        front.LateralVelocity = latDir * Mathf.Abs(front.LateralVelocity) * 0.5f;
-                        rear.LateralVelocity = -latDir * Mathf.Abs(rear.LateralVelocity) * 0.5f;
+                        float frontShare = frontShield ? 0f : rearShield ? 2f : 1f;
+                        float rearShare = 2f - frontShare;
+                        front.Lateral += latDir * overlap * frontShare;
+                        rear.Lateral -= latDir * overlap * rearShare;
+                        if (!frontShield) front.LateralVelocity = latDir * Mathf.Abs(front.LateralVelocity) * 0.5f;
+                        if (!rearShield) rear.LateralVelocity = -latDir * Mathf.Abs(rear.LateralVelocity) * 0.5f;
+                    }
+                    else if (rearShield)
+                    {
+                        // A shielded car nudges the car in front aside and keeps its own speed.
+                        rear.Distance -= len - Mathf.Abs(dd);
+                        front.LateralVelocity += latDir * Tuning.bumpLateralKick * 1.6f;
                     }
                     else
                     {
@@ -473,6 +520,7 @@ namespace TurboRush.Race
                     {
                         m_PlayerBumpCooldown = 0.5f;
                         PlayerBumped?.Invoke(a.IsPlayer ? b.Index : a.Index);
+                        if (Player.Shielded) PlayerShieldBlock?.Invoke();
                     }
                 }
             }
@@ -579,6 +627,12 @@ namespace TurboRush.Race
             CarTuning t = r.Tuning;
             steerTarget = Mathf.Clamp(steerTarget, -1f, 1f);
 
+            // Power-ups: turbo and boost pads raise the target speed for a moment; the shield runs down.
+            float boost = 1f;
+            if (r.TurboTimer > 0f) { r.TurboTimer -= dt; boost = Mathf.Max(boost, tun.turboSpeedFactor); }
+            if (r.PadTimer > 0f) { r.PadTimer -= dt; boost = Mathf.Max(boost, tun.padSpeedFactor); }
+            if (r.ShieldTimer > 0f) r.ShieldTimer -= dt;
+
             // Steering builds at steerRate, and returns/reverses at the (faster) returnRate.
             bool building = Mathf.Abs(steerTarget) > Mathf.Abs(r.Steer) && (r.Steer == 0f || Mathf.Sign(steerTarget) == Mathf.Sign(r.Steer));
             r.Steer = Mathf.MoveTowards(r.Steer, steerTarget, (building ? t.steerRate : t.returnRate) * dt);
@@ -605,7 +659,7 @@ namespace TurboRush.Race
                 {
                     impact = outward;
                     r.LateralVelocity = -side * outward * tun.barrierBounce;
-                    r.Speed *= Mathf.Lerp(1f, tun.barrierSpeedKeep, Mathf.Clamp01(outward / 6f));
+                    if (!r.Shielded) r.Speed *= Mathf.Lerp(1f, tun.barrierSpeedKeep, Mathf.Clamp01(outward / 6f));
                     hit = outward > 1.5f;
                 }
             }
@@ -616,8 +670,9 @@ namespace TurboRush.Race
                 float zoneFactor = r.Zone == SurfaceZone.Road ? 1f : r.Zone == SurfaceZone.Shoulder ? tun.shoulderSpeedFactor : tun.runoffSpeedFactor;
                 // Slopes: a little slower uphill, a little faster downhill (the same for every car).
                 float slope = Mathf.Clamp(s.forward.y, -0.2f, 0.2f);
-                float target = Mathf.Max(0f, targetSpeed * zoneFactor * (1f - slope * tun.slopeSpeedEffect));
-                if (r.Speed < target)
+                float target = Mathf.Max(0f, targetSpeed * boost * zoneFactor * (1f - slope * tun.slopeSpeedEffect));
+                if (boost > 1f && r.Speed < target) r.Speed = Mathf.MoveTowards(r.Speed, target, tun.boostAcceleration * dt);
+                else if (r.Speed < target)
                 {
                     float a = t.acceleration * Mathf.Lerp(1f, 0.3f, Mathf.Clamp01(r.Speed / Mathf.Max(1f, target)));
                     r.Speed = Mathf.Min(target, r.Speed + a * dt);

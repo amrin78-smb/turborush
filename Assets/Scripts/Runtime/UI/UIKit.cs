@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace TurboRush.UI
 {
-    public enum Icon { Pause, Play, Restart, Home, Star, StarEmpty, Lock, Flag, Car, Settings, Music, Sound, Vibrate, Steer, ArrowLeft, ArrowRight, Check, Trophy, Back, Road, Speed, Quality, Count }
+    public enum Icon { Pause, Play, Restart, Home, Star, StarEmpty, Lock, Flag, Car, Settings, Music, Sound, Vibrate, Steer, ArrowLeft, ArrowRight, Check, Trophy, Back, Road, Speed, Quality, Bolt, Shield, Count }
 
     /// <summary>Factory for the code-built, safe-area aware UI.</summary>
     public static class UIKit

@@ -34,6 +34,8 @@ namespace TurboRush.UI
         private GameObject m_PauseOverlay;
         private GameObject m_Results;
         private Button m_PauseButton;
+        private RectTransform m_TurboChip, m_ShieldChip, m_TurboFill, m_ShieldFill;
+        private static readonly Color ShieldColor = new Color(0.35f, 0.8f, 1f);
 
         private int m_ShownSpeed = -1, m_ShownPos = -1, m_ShownLap = -1;
         private bool m_Mph;
@@ -86,6 +88,10 @@ namespace TurboRush.UI
             m_Overtake.gameObject.AddComponent<CanvasGroup>();
             m_OvertakePop = m_Overtake.gameObject.AddComponent<Pop>();
             m_Overtake.gameObject.SetActive(false);
+
+            // Active power-ups (under the position panel): icon + a bar that runs down.
+            m_TurboChip = PowerUpChip(h, "TurboChip", Icon.Bolt, m_Skin.accent, out m_TurboFill);
+            m_ShieldChip = PowerUpChip(h, "ShieldChip", Icon.Shield, ShieldColor, out m_ShieldFill);
 
             // Progress (top-centre)
             RectTransform prog = UIKit.Place(UIKit.Rect(h, "Progress"), new Vector2(0.5f, 1), new Vector2(0.5f, 1), new Vector2(-20, -8), new Vector2(820, 150));
@@ -153,6 +159,26 @@ namespace TurboRush.UI
             BuildHint(h);
         }
 
+        private RectTransform PowerUpChip(Transform h, string name, Icon icon, Color color, out RectTransform fill)
+        {
+            Image bg = UIKit.Panel(h, name, m_Skin.panel);
+            bg.raycastTarget = false;
+            RectTransform rt = UIKit.Place(bg.rectTransform, new Vector2(0, 1), new Vector2(0, 1), new Vector2(0, -182), new Vector2(140, 140));
+            Image ic = UIKit.Image(rt, "Icon", m_Skin.Get(icon), color);
+            UIKit.Place(ic.rectTransform, new Vector2(0.5f, 1), new Vector2(0.5f, 1), new Vector2(0, -10), new Vector2(96, 96));
+            Image track = UIKit.Image(rt, "Bar", m_Skin.rounded, new Color(0f, 0f, 0.1f, 0.5f));
+            UIKit.Place(track.rectTransform, new Vector2(0.5f, 0), new Vector2(0.5f, 0), new Vector2(0, 12), new Vector2(112, 18));
+            Image f = UIKit.Image(track.transform, "Fill", m_Skin.rounded, color);
+            fill = f.rectTransform;
+            fill.anchorMin = new Vector2(0, 0);
+            fill.anchorMax = new Vector2(0, 1);
+            fill.pivot = new Vector2(0, 0.5f);
+            fill.anchoredPosition = Vector2.zero;
+            fill.sizeDelta = new Vector2(112, 0);
+            rt.gameObject.SetActive(false);
+            return rt;
+        }
+
         private void BuildHint(Transform h)
         {
             m_Hint = UIKit.Rect(h, "SteerHint").gameObject;
@@ -218,6 +244,8 @@ namespace TurboRush.UI
             m_Center.gameObject.SetActive(false);
             m_Banner.gameObject.SetActive(false);
             m_Overtake.gameObject.SetActive(false);
+            m_TurboChip.gameObject.SetActive(false);
+            m_ShieldChip.gameObject.SetActive(false);
             m_Hud.SetActive(true);
             m_PauseButton.gameObject.SetActive(true);
             m_PauseOverlay.SetActive(false);
@@ -257,6 +285,21 @@ namespace TurboRush.UI
             m_BarFill.sizeDelta = new Vector2(Mathf.Max(0f, width * prog), m_BarFill.sizeDelta.y);
             for (int i = 0; i < m_Markers.Length; i++)
                 m_Markers[i].anchoredPosition = new Vector2(4f + width * sim.Progress(i), 0f);
+
+            RaceTuning tun = sim.Tuning;
+            float boost = Mathf.Max(p.TurboTimer / Mathf.Max(0.01f, tun.turboSeconds), p.PadTimer / Mathf.Max(0.01f, tun.padSeconds));
+            float x = 0f;
+            Chip(m_TurboChip, m_TurboFill, p.Boosting, boost, ref x);
+            Chip(m_ShieldChip, m_ShieldFill, p.Shielded, p.ShieldTimer / Mathf.Max(0.01f, tun.shieldSeconds), ref x);
+        }
+
+        private static void Chip(RectTransform chip, RectTransform fill, bool on, float left, ref float x)
+        {
+            if (chip.gameObject.activeSelf != on) chip.gameObject.SetActive(on);
+            if (!on) return;
+            chip.anchoredPosition = new Vector2(x, -182f);
+            fill.sizeDelta = new Vector2(112f * Mathf.Clamp01(left), 0f);
+            x += 155f;
         }
 
         public void ShowCountdown(int n)
@@ -273,8 +316,17 @@ namespace TurboRush.UI
             m_CenterPop.Play(1.1f);
         }
 
+        public void ShowPowerUp(Track.PowerUpKind kind)
+        {
+            bool turbo = kind == Track.PowerUpKind.Turbo;
+            m_Banner.color = turbo ? m_Skin.accent : ShieldColor;
+            m_Banner.SetText(turbo ? "TURBO!" : "SHIELD!");
+            m_BannerPop.Play(1.0f);
+        }
+
         public void ShowLap(int lap, int laps)
         {
+            m_Banner.color = m_Skin.accent;
             m_Banner.SetText(lap == laps ? "FINAL LAP!" : "LAP {0}/{1}", lap, laps);
             m_BannerPop.Play(1.8f);
         }
@@ -297,6 +349,7 @@ namespace TurboRush.UI
 
         public void ShowJump()
         {
+            m_Banner.color = m_Skin.accent;
             m_Banner.SetText("BIG JUMP!");
             m_BannerPop.Play(1.0f);
         }
@@ -325,7 +378,7 @@ namespace TurboRush.UI
             UIKit.Place(trophy.rectTransform, new Vector2(0, 1), new Vector2(0.5f, 0.5f), new Vector2(170, -150), new Vector2(170, 170));
             TextMeshProUGUI place = UIKit.Label(pt, "Place", UIKit.Ordinal(pos) + "!", 170, gold, TextAlignmentOptions.Left, true);
             UIKit.Place(place.rectTransform, new Vector2(0, 1), new Vector2(0, 0.5f), new Vector2(280, -150), new Vector2(560, 220));
-            TextMeshProUGUI track = UIKit.Label(pt, "Track", m_Race.Track.displayName, 50, Color.white, TextAlignmentOptions.Left, true);
+            TextMeshProUGUI track = UIKit.Label(pt, "Track", m_Race.Track.displayName + "  -  " + sim.Difficulty, 50, Color.white, TextAlignmentOptions.Left, true);
             UIKit.Place(track.rectTransform, new Vector2(0, 1), new Vector2(0, 0.5f), new Vector2(90, -290), new Vector2(700, 70));
             TextMeshProUGUI time = UIKit.Label(pt, "Time", "Time  " + UIKit.FormatTime(p.FinishTime), 64, Color.white, TextAlignmentOptions.Left, true);
             UIKit.Place(time.rectTransform, new Vector2(0, 1), new Vector2(0, 0.5f), new Vector2(90, -370), new Vector2(700, 80));

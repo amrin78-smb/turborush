@@ -108,6 +108,7 @@ namespace TurboRush.Core
             int frames = 0;
             float worst = 0f;
             bool shotRacing = false, paused = false, jumped = false, airShot = false, rampShot = false;
+            bool pickupShot = false, padShot = false, turboShot = false, shieldShot = false;
             int takeoffs = 0, landings = 0;
             float maxAir = 0f, maxHeight = 0f;
             System.Action onTakeoff = () => takeoffs++;
@@ -121,6 +122,8 @@ namespace TurboRush.Core
                 frames++;
                 worst = Mathf.Max(worst, Time.unscaledDeltaTime);
                 if (Mathf.FloorToInt(el / 4f) % 2 == 0) targetLane = 3f; else targetLane = -3f;
+                RacerState me = race.Sim.Player;
+                if (race.Sim.PowerUps.Seek(me, 1f, out float powerUpLane)) targetLane = powerUpLane; // drive for power-ups like a player would
                 float err = targetLane - race.Sim.Player.Lateral;
                 race.Input.Override = Mathf.Abs(err) > 0.8f ? Mathf.Sign(err) : 0f;
                 if (!shotRacing && el > 7f)
@@ -148,6 +151,21 @@ namespace TurboRush.Core
                 }
                 if (el > 12f && el < 12.1f) yield return Shot("06b_racing");
                 maxHeight = Mathf.Max(maxHeight, race.Sim.Player.Height);
+                PowerUpField pf = race.Sim.PowerUps;
+                if (!pickupShot)
+                    for (int i = 0; i < pf.SlotCount; i++)
+                    {
+                        float ahead = race.Sim.Track.Path.DeltaOnLoop(pf.SlotDistance[i], me.Distance);
+                        if (ahead > 22f && ahead < 30f && pf.Available(race.Sim.PlayerIndex, i) && me.Distance > 0f) { pickupShot = true; yield return Shot("06e_powerups_ahead"); break; }
+                    }
+                if (!padShot)
+                    for (int i = 0; i < pf.PadCount; i++)
+                    {
+                        float ahead = race.Sim.Track.Path.DeltaOnLoop(pf.PadStart[i], me.Distance);
+                        if (ahead > 14f && ahead < 20f && me.Distance > 0f) { padShot = true; yield return Shot("06h_boost_pad"); break; }
+                    }
+                if (!turboShot && me.TurboTimer > 1.4f && me.TurboTimer < 2f) { turboShot = true; yield return Shot("06f_turbo"); }
+                if (!shieldShot && me.ShieldTimer > 3f && me.ShieldTimer < 5f) { shieldShot = true; yield return Shot("06g_shield"); }
                 if (!rampShot && race.Sim.Track.JumpCount > 0)
                 {
                     float toLip = race.Sim.Track.Path.DeltaOnLoop(race.Sim.Track.JumpLip(0), race.Sim.Player.Distance);
@@ -172,6 +190,11 @@ namespace TurboRush.Core
                 m_Report.AppendLine($"Jumps: {takeoffs} take-offs, {landings} landings, longest air time {maxAir:0.00}s, max height {maxHeight:0.00} m");
                 if (!DebugArgs.Fast) Check(takeoffs > 0 && landings == takeoffs && maxHeight < 3f, "player jumped and landed safely");
             }
+            RacerState pl = race.Sim.Player;
+            int aiPickups = 0;
+            foreach (RacerState r in race.Sim.Racers) if (!r.IsPlayer) aiPickups += r.PowerUpsCollected;
+            m_Report.AppendLine($"Difficulty {race.Sim.Difficulty}; player power-ups {pl.PowerUpsCollected}, boost pads {pl.PadsHit}; AI power-ups {aiPickups}");
+            if (!DebugArgs.Fast) Check(pl.PowerUpsCollected > 0, "player collected power-ups");
             float raceSeconds = Time.realtimeSinceStartup - raceStart;
             m_Report.AppendLine($"Race wall time {raceSeconds:0.0}s, sim clock {race.Sim.Clock:0.0}s, frames {frames}, avg FPS {frames / Mathf.Max(0.01f, raceSeconds):0.0}, worst frame {worst * 1000f:0}ms (desktop xvfb software GL: NOT representative of phones)");
             Check(s.States.State == GameState.Finishing, "player finished → Finishing");

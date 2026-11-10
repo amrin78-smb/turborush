@@ -59,6 +59,8 @@ namespace TurboRush.Core
         public Material sky;            // skybox
         public Material blobShadow;
         public Material carBase;        // cloned per paint colour at runtime (cached)
+        public Material glow;           // additive power-up glow (turbo flames, pickup halos)
+        public Material bubble;         // additive rim-lit shield bubble
     }
 
     [System.Serializable]
@@ -72,6 +74,7 @@ namespace TurboRush.Core
         [Tooltip("Rotation smoothing (higher = snappier).")] public float rotationSharpness = 8f;
         public float fov = 60f;
         [Tooltip("Extra FOV at top speed (kept small for comfort).")] public float speedFov = 6f;
+        [Tooltip("Extra FOV while a turbo or boost pad is active (eased in and out).")] public float boostFov = 6f;
         [Tooltip("How much of the car's lateral offset the camera follows (0..1).")] public float lateralFollow = 0.75f;
         [Tooltip("How much the camera rolls with track banking (0 = never).")] public float bankFollow = 0.25f;
     }

@@ -140,6 +140,13 @@ namespace TurboRush.EditorTools
                 case UI.Icon.Road: return p => Sub(Polygon(p, V(0.38f, 0.88f), V(0.62f, 0.88f), V(0.9f, 0.12f), V(0.1f, 0.12f)) - 0.01f,
                     Union(Box(p, V(0.5f, 0.24f), V(0.035f, 0.08f)), Box(p, V(0.5f, 0.49f), V(0.028f, 0.07f)), Box(p, V(0.5f, 0.72f), V(0.022f, 0.055f))));
                 case UI.Icon.Speed: return p => Union(Arc(p, V(0.5f, 0.4f), 0.33f, 0.09f, 0f, 180f), Segment(p, V(0.5f, 0.4f), V(0.68f, 0.62f), 0.08f), Circle(p, V(0.5f, 0.4f), 0.08f));
+                case UI.Icon.Bolt: return p => Polygon(p, V(0.58f, 0.95f), V(0.24f, 0.47f), V(0.47f, 0.47f), V(0.38f, 0.05f), V(0.78f, 0.57f), V(0.55f, 0.57f), V(0.72f, 0.95f)) - 0.02f;
+                case UI.Icon.Shield: return p =>
+                {
+                    float Crest(float k) => Polygon(p, V(0.5f, 0.5f + 0.43f * k), V(0.5f + 0.33f * k, 0.5f + 0.31f * k), V(0.5f + 0.29f * k, 0.5f - 0.06f * k),
+                        V(0.5f, 0.5f - 0.43f * k), V(0.5f - 0.29f * k, 0.5f - 0.06f * k), V(0.5f - 0.33f * k, 0.5f + 0.31f * k));
+                    return Union(Sub(Crest(1f), Crest(0.8f)), Crest(0.62f));
+                };
                 case UI.Icon.Quality: return p => Union(Sub(Box(p, V(0.5f, 0.5f), V(0.36f, 0.3f), 0.06f), Box(p, V(0.5f, 0.5f), V(0.29f, 0.23f), 0.02f)),
                     Polygon(p, V(0.24f, 0.29f), V(0.42f, 0.56f), V(0.56f, 0.38f), V(0.64f, 0.48f), V(0.76f, 0.29f)), Circle(p, V(0.66f, 0.63f), 0.06f));
                 default: return p => Circle(p, V(0.5f, 0.5f), 0.4f);

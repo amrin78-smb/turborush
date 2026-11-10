@@ -38,6 +38,51 @@ namespace TurboRush.Track
         public static float Profile(float u, float height) => u <= 0f || u > 1f ? 0f : height * (0.6f * u + 0.4f * u * u);
     }
 
+    /// <summary>Drive-through power-ups (no button: they work as soon as a car touches them).</summary>
+    public enum PowerUpKind
+    {
+        None = 0,
+        /// <summary>Turbo: a few seconds above top speed.</summary>
+        Turbo = 1,
+        /// <summary>Shield: bumps and barrier scrapes do not slow the car for a few seconds.</summary>
+        Shield = 2
+    }
+
+    /// <summary>
+    /// A row of up to three floating power-ups across the road (left, centre and right lane). A collected power-up
+    /// comes back after <c>RaceTuning.pickupRespawnSeconds</c>, so cars further back can still get one.
+    /// </summary>
+    [Serializable]
+    public struct PowerUpRow
+    {
+        [Tooltip("Lap fraction (0..1) of the row.")]
+        public float lapFraction;
+        public PowerUpKind left, centre, right;
+        public PowerUpRow(float lapFraction, PowerUpKind left, PowerUpKind centre, PowerUpKind right)
+        {
+            this.lapFraction = lapFraction; this.left = left; this.centre = centre; this.right = right;
+        }
+
+        /// <summary>Lane offsets as a fraction of the road half-width, for slots 0 (left), 1 (centre), 2 (right).</summary>
+        public static float SlotLane(int slot) => (slot - 1) * 0.58f;
+
+        public PowerUpKind Slot(int slot) => slot == 0 ? left : slot == 1 ? centre : right;
+    }
+
+    /// <summary>A glowing boost strip painted on the road: a short speed burst for any car that drives over it.</summary>
+    [Serializable]
+    public struct BoostPad
+    {
+        /// <summary>Pad length along the road and half its width (metres). Shared by the rules and the geometry.</summary>
+        public const float Length = 9f, HalfWidth = 1.8f;
+
+        [Tooltip("Lap fraction (0..1) of the start of the pad.")]
+        public float lapFraction;
+        [Tooltip("Centre of the pad as a fraction of the road half-width (−1 left edge .. 1 right edge).")]
+        public float lane;
+        public BoostPad(float lapFraction, float lane) { this.lapFraction = lapFraction; this.lane = lane; }
+    }
+
     [Serializable]
     public sealed class TrackPalette
     {
@@ -113,6 +158,12 @@ namespace TurboRush.Track
         public JumpRamp[] jumps = Array.Empty<JumpRamp>();
         public bool sea;
         public float seaLevel = -2f;
+
+        [Header("Power-ups")]
+        [Tooltip("Rows of floating power-ups. Keep them on the road, away from ramps and at least 40 m from the start line.")]
+        public PowerUpRow[] powerUps = Array.Empty<PowerUpRow>();
+        [Tooltip("Boost strips on the road surface.")]
+        public BoostPad[] boostPads = Array.Empty<BoostPad>();
 
         [Header("Scenery")]
         public int seed = 1;

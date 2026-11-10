@@ -51,6 +51,17 @@ Screenshots: `Docs/screenshots/` (contact sheet: `layout_contact_sheet.png`).
 **Pending physical-device validation.** No device was attached to the build machine.
 Second-launch regression, FPS, thermals, selected graphics API: follow `Docs/REDMI_A3_TEST_CHECKLIST.md` and record the results here.
 
+## 0.4.0 (versionCode 6), M11 power-ups and difficulty: release APK, 2026-11-10
+`Tools/verify_apk.sh` **PASS** (`Docs/validation/RC_0.4.0_release_apk.txt`): `arm64-v8a` + `armeabi-v7a`, PowerVR filter packaged,
+landscape, VIBRATE only (no INTERNET). Size 54,392,839 bytes · SHA-256 `b3b13af6285de1a43ede3222f9aa5d3cec450ba92c345b1f65981d40055ff93f`.
+
+| Check | Result |
+|---|---|
+| EditMode / PlayMode tests | 62/62 and 3/3 passed (`Docs/validation/*-results.xml`) |
+| Balance (scripted skilled driver, all tracks × difficulties) | Easy: 1st on 4/4 tracks. Normal: 1st–2nd (wins 2/4 with power-ups). Hard: 1st–4th (wins 1/4). `balance_report_0.4.0.csv` |
+| Linux autopilot | Hilltop Hops / Normal 1920×1080: PASS, 1st. Skyway / Hard 2400×1080 + 90 px inset: PASS, 4th. Coastal / Easy 2048×1536: PASS, 1st. Power-ups collected in every run, 0 errors (`autopilot_reports_m11.txt`) |
+| Redmi A3: power-up effects FPS (additive bubble/flames), feel of the difficulty levels | **Pending physical-device validation** |
+
 ## 0.3.2 (versionCode 5): louder engine, release APK, 2026-11-10
 `Tools/verify_apk.sh` **PASS** (`Docs/validation/RC_0.3.2_release_apk.txt`): `arm64-v8a` + `armeabi-v7a`, PowerVR filter packaged,
 landscape, VIBRATE only (no INTERNET). Size 54,307,909 bytes · SHA-256 `930498db4cfba3dd04f83d5f9dc42c0aca7bba875fcece14eda85c20a2d5f53a`.

@@ -32,6 +32,8 @@ namespace TurboRush.UI
         private TextMeshProUGUI m_SelectLabel;
         private readonly List<Image> m_CarChips = new List<Image>();
         private readonly List<GameObject> m_TrackCards = new List<GameObject>();
+        private readonly Image[] m_DiffButtons = new Image[3];
+        private static readonly Color[] DiffColors = { new Color(0.25f, 0.75f, 0.35f), new Color(1f, 0.62f, 0.1f), new Color(0.9f, 0.27f, 0.25f) };
         private readonly Dictionary<string, TextMeshProUGUI> m_SettingValues = new Dictionary<string, TextMeshProUGUI>();
 
         public GameObject MainRoot => m_Main;
@@ -265,6 +267,15 @@ namespace TurboRush.UI
             dim.rectTransform.SetAsFirstSibling();
             BackButton(root);
             Title(root, "Tracks");
+            // Difficulty (top-right): Easy is the original field; Normal and Hard race harder and grab more power-ups.
+            string[] names = { "Easy", "Normal", "Hard" };
+            for (int d = 0; d < 3; d++)
+            {
+                int level = d;
+                Button b = UIKit.Button(root, "Difficulty_" + names[d], names[d], null, DiffColors[d], new Vector2(250, 110), () => SetDifficulty((AI.Difficulty)level), 48);
+                UIKit.Place((RectTransform)b.transform, new Vector2(1, 1), new Vector2(1, 1), new Vector2(-10 - (2 - d) * 265, -12), new Vector2(250, 110));
+                m_DiffButtons[d] = b.GetComponent<Image>();
+            }
             int n = m_Cfg.tracks.Length;
             // Up to three cards at full size; more cards shrink to fit the 1920-wide reference width.
             float gap = n > 3 ? 36f : 50f;
@@ -320,6 +331,25 @@ namespace TurboRush.UI
                     st.color = s < stars ? m_Skin.accent : new Color(0.3f, 0.35f, 0.5f, 0.45f);
                 }
                 card.localScale = m_S.Save.selectedTrack == t.id ? Vector3.one * 1.04f : Vector3.one;
+            }
+            RefreshDifficulty();
+        }
+
+        private void SetDifficulty(AI.Difficulty d)
+        {
+            m_S.Settings.difficulty = d;
+            m_S.Persist();
+            RefreshDifficulty();
+        }
+
+        private void RefreshDifficulty()
+        {
+            int sel = (int)m_S.Settings.difficulty;
+            for (int d = 0; d < m_DiffButtons.Length; d++)
+            {
+                bool on = d == sel;
+                m_DiffButtons[d].color = on ? DiffColors[d] : Color.Lerp(DiffColors[d], m_Skin.locked, 0.7f);
+                m_DiffButtons[d].transform.localScale = on ? Vector3.one * 1.06f : Vector3.one * 0.92f;
             }
         }
 
