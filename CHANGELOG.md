@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.3.0 (versionCode 3) — 2026-11-10, M7: proper 3D car models
+- **8 new original car models** made in Blender 5.2 (`Art/Cars/`): Blaze, Zoom, Sunny and Mint by Kimi from the art-brief prompts;
+  Grape (buggy), Tango (rally hatch), Frost (concept car) and Bolt (hyper-racer) built by script (`Tools/Blender/carkit.py`, `car_*.py`).
+- `Tools/Blender/check_car_fbx.py` checks any car FBX against the brief: names, hierarchy, triangle budget, per-car size limits,
+  wheel pivots and radius, ground contact, front direction and material names. All 8 pass.
+- `CarBuilder` now imports the FBX files (copied by `Tools/setup.sh`) and converts every material slot into the game's one-material
+  vertex-colour format: Paint takes the car's paint colour, Accent and the fixed slots use the brief colours, lights and Glow glow.
+  It derives the importer's turn/mirror from the wheel names, so every car faces +Z with its left at −X.
+- Prefabs: Body with four wheel transforms and a LODGroup (Body_LOD1 for distant cars, ≤ 900 triangles).
+  `RacerView` spins the wheels with the distance travelled and steers the front wheels (22° at full steer); respawn flicker covers every renderer.
+- Validator: 4 wheels, 2-level LOD, ≤ 3,700 triangles per car. Tests: 50 EditMode (4 new car-model tests) + 3 PlayMode.
+- `Tools/Turbo Rush/Render Car Lineup` renders all cars in-engine (`Docs/screenshots/m7_cars_in_engine.png`).
+- Fix (test only): `ShippedJumpsAreOnStraightsAndAITakesThemCleanly` stepped at 1/30 s and missed landings that happen in the first
+  of two sub-steps; it now steps at `RaceSimulation.MaxSubStep`. The 0.2.0 record of 46/46 predates the sub-step change.
+
 ## 0.2.0 (versionCode 2) — 2026-11-10, M9: slopes, jumps and a fourth track
 - **Hilltop Hops** (unlock at 6 ★): 1503 m rolling-hills loop with 17 m of climb, an S-bend over the top, windmills, and two jumps.
 - **Jumps**: `JumpRamp` data on `TrackDefinition`. Cars ride up the ramp and fly a ballistic arc from the lip (`RaceTuning`: gravity 14 m/s²,

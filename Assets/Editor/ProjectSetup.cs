@@ -116,6 +116,18 @@ namespace TurboRush.EditorTools
                 {
                     if (c == null || c.prefab == null || c.prefab.GetComponent<RacerView>() == null) errors.Add("Car missing prefab/RacerView: " + (c != null ? c.id : "null"));
                     else if (c.tuning.maxSpeedKmh <= 0) errors.Add("Car tuning invalid: " + c.id);
+                    else
+                    {
+                        RacerView v = c.prefab.GetComponent<RacerView>();
+                        if (v.Wheels == null || v.Wheels.Length != 4 || System.Array.Exists(v.Wheels, w => w == null)) errors.Add("Car needs 4 wheels: " + c.id);
+                        LODGroup g = c.prefab.GetComponent<LODGroup>();
+                        if (g == null || g.lodCount != 2) errors.Add("Car needs a 2-level LODGroup: " + c.id);
+                        int tris = 0;
+                        foreach (MeshFilter mf in c.prefab.GetComponentsInChildren<MeshFilter>())
+                            if (mf.name != "Body_LOD1" && mf.name != "Shadow") tris += mf.sharedMesh.triangles.Length / 3;
+                        if (tris > 3700) errors.Add($"Car {c.id} has {tris} triangles (> 3700)");
+                        Debug.Log($"[TR] Car {c.id}: {tris} tris, wheel radius {v.WheelRadius:0.00} m");
+                    }
                 }
                 if (cfg.cars.Length > 0 && cfg.cars[0].unlockStars != 0) errors.Add("First car must be available immediately");
                 if (cfg.tracks.Length < 3) errors.Add("Need 3 tracks");

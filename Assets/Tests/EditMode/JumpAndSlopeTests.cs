@@ -221,9 +221,10 @@ namespace TurboRush.Tests
                 sim.Player.Autopilot = true;
                 int landings = 0;
                 float maxHeight = 0f;
-                for (float t = 0f; t < 400f && sim.FinishedCount < cars.Length; t += 1f / 30f)
+                // Step at the simulation's sub-step size: LandingImpact only lives for the sub-step the car lands in.
+                for (float t = 0f; t < 400f && sim.FinishedCount < cars.Length; t += RaceSimulation.MaxSubStep)
                 {
-                    sim.Step(1f / 30f, 0f);
+                    sim.Step(RaceSimulation.MaxSubStep, 0f);
                     foreach (RacerState r in sim.Racers)
                     {
                         maxHeight = Mathf.Max(maxHeight, r.Height);

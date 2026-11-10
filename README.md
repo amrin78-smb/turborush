@@ -26,7 +26,7 @@ the player **holds the left or right half of the screen to steer**. Offline, no 
 - Jumps: yellow kicker ramps across the asphalt (warning signs 70 m before). At full speed a car flies about 0.65 s (≈ 27 m)
   and peaks about 1.2 m above the road (measured in the Linux autopilot run); steering is softened in the air, and the landing costs almost no speed. Cars on the shoulder beside a ramp
   simply drive past it.
-- 8 original stylised cars in three body styles. **Blaze** is owned from the start; the others unlock at 1–9 ★.
+- 8 original stylised low-poly 3D cars (Blender models in `Art/Cars/`) with spinning, steering wheels. **Blaze** is owned from the start; the others unlock at 1–9 ★.
   Cars are cosmetic: every car has the same handling, so nothing can be bought or grinded into an advantage.
 - Stars per race: 1st = 3 ★, 2nd–3rd = 2 ★, any finish = 1 ★. The best result per track counts (max 12 ★).
 

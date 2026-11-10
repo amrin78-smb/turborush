@@ -1,0 +1,37 @@
+Turbo Rush 3D autopilot  2026-11-10 09:27:27  screen 1920x1080  aspect 1.778  match=1  safe-inset=(0.00, 0.00, 0.00, 0.00)
+PASS menu scene loaded
+PASS state MainMenu
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1080_01_main_menu.png
+PASS state VehicleSelect
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1080_02_garage.png
+PASS state TrackSelect
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1080_03_tracks.png
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1080_04_settings.png
+PASS race scene loaded (Hilltop Hops)
+PASS state Countdown
+PASS no progress during countdown
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1080_05_countdown.png
+PASS state Racing after GO
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1080_06_racing.png
+PASS state Paused
+PASS pause freezes clock and progress
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1080_07_pause.png
+PASS resume returns to Racing
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1080_06d_ramp.png
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1080_06c_jump.png
+Jumps: 4 take-offs, 4 landings, longest air time 0.67s, max height 1.17 m
+PASS player jumped and landed safely
+Race wall time 121.1s, sim clock 76.1s, frames 760, avg FPS 6.3, worst frame 354ms (desktop xvfb software GL: NOT representative of phones)
+PASS player finished → Finishing
+PASS finish time recorded (76.02s, place 1, respawns 0)
+PASS state Results
+SHOT /home/amrin/development/Nocvault/turborush/Logs/AutoPilot/1920x1080_08_results.png
+AI finished by results screen: 0/5
+PASS restart resets race to countdown
+PASS no duplicate race managers
+PASS results screen removed on restart
+PASS racing again after restart
+PASS back at MainMenu
+PASS single Services instance
+PASS no errors/exceptions logged (0)
+RESULT: PASS

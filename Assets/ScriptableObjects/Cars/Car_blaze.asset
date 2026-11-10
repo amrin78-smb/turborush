@@ -15,7 +15,7 @@ MonoBehaviour:
   id: blaze
   displayName: Blaze
   bodyStyle: 0
-  paint: {r: 0.93, g: 0.16, b: 0.12, a: 1}
+  paint: {r: 0.92941177, g: 0.16078432, b: 0.12156863, a: 1}
   accent: {r: 1, g: 1, b: 1, a: 1}
   unlockStars: 0
   prefab: {fileID: 2723680993601038613, guid: 80a161c3b5f859ec18b11e396de51de9, type: 3}

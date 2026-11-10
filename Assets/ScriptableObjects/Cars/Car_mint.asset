@@ -15,7 +15,7 @@ MonoBehaviour:
   id: mint
   displayName: Mint
   bodyStyle: 0
-  paint: {r: 0.18, g: 0.8, b: 0.52, a: 1}
+  paint: {r: 0.18039216, g: 0.8, b: 0.52156866, a: 1}
   accent: {r: 1, g: 1, b: 1, a: 1}
   unlockStars: 4
   prefab: {fileID: 7464968299001815173, guid: e60eac4901b4275788910c7f407a7158, type: 3}

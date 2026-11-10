@@ -15,8 +15,8 @@ MonoBehaviour:
   id: zoom
   displayName: Zoom
   bodyStyle: 1
-  paint: {r: 0.1, g: 0.45, b: 0.96, a: 1}
-  accent: {r: 1, g: 0.85, b: 0.1, a: 1}
+  paint: {r: 0.101960786, g: 0.4509804, b: 0.9607843, a: 1}
+  accent: {r: 1, g: 0.8509804, b: 0.101960786, a: 1}
   unlockStars: 1
   prefab: {fileID: 1375187747064075629, guid: 0b3d9f96b59549ec89eee4d3bcc06b50, type: 3}
   portrait: {fileID: 0}

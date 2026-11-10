@@ -15,8 +15,8 @@ MonoBehaviour:
   id: grape
   displayName: Grape
   bodyStyle: 1
-  paint: {r: 0.56, g: 0.3, b: 0.92, a: 1}
-  accent: {r: 1, g: 0.6, b: 0.9, a: 1}
+  paint: {r: 0.56078434, g: 0.29803923, b: 0.92156863, a: 1}
+  accent: {r: 1, g: 0.6, b: 0.9019608, a: 1}
   unlockStars: 5
   prefab: {fileID: 1178701354204437878, guid: c98b3fd3ea563a9a8a33d9cf5e6832d9, type: 3}
   portrait: {fileID: 0}

@@ -178,7 +178,7 @@ bpy.ops.export_scene.fbx(
     use_mesh_modifiers=True, mesh_smooth_type='FACE', use_triangles=True,
     add_leaf_bones=False, bake_anim=False, use_custom_props=False)
 ```
-(This export call has been verified to run in Blender 5.2.3. With the car facing −Y, it imports into Unity facing +Z.)
+(This export call has been verified to run in Blender 5.2.3. The game's importer turns and mirrors the model into its own axes using the wheel names, so the names and sides above matter.)
 
 ### Self-check the script must perform before exporting (fail loudly with an exception if any check fails)
 1. All 7 objects exist with the exact names above, and the wheels and Body are children of `Car_{id}`.

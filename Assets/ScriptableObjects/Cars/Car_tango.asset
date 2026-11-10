@@ -15,7 +15,7 @@ MonoBehaviour:
   id: tango
   displayName: Tango
   bodyStyle: 2
-  paint: {r: 1, g: 0.48, b: 0.08, a: 1}
+  paint: {r: 1, g: 0.47843137, b: 0.078431375, a: 1}
   accent: {r: 1, g: 1, b: 1, a: 1}
   unlockStars: 7
   prefab: {fileID: 468633868629850163, guid: 9d5547e0bc1b27ccf834edaa982695a6, type: 3}

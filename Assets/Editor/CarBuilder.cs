@@ -8,52 +8,68 @@ using UnityEngine;
 namespace TurboRush.EditorTools
 {
     /// <summary>
-    /// Original stylised low-poly cars: a lofted body (paint-masked so one mesh serves every colour), glass cabin,
-    /// chunky wheels, emissive tail/head lights, accent spoiler/skirts. Three silhouettes, eight colour schemes.
+    /// Builds the eight car prefabs from the Blender models (Art/Cars/&lt;id&gt;/Car_&lt;id&gt;.fbx, made by Tools/Blender or Kimi).
+    /// Each FBX part is converted into the game's one-material vertex-colour format: flat-shaded, colour per material
+    /// slot (Paint faces carry the paint mask so the car material recolours them, lights glow via UV2.x).
+    /// Prefab: root (RacerView, LODGroup) ▸ Body (leans) ▸ Wheel_FL/FR/RL/RR (spin, front ones steer) + Body_LOD1, and Shadow.
     /// </summary>
     public static class CarBuilder
     {
+        public const string SourceFolder = "Assets/Art/Models/Vehicles/Source";
+        public static readonly string[] WheelNames = { "Wheel_FL", "Wheel_FR", "Wheel_RL", "Wheel_RR" };
+
         private struct Spec
         {
             public string id, name;
             public CarBodyStyle style;
             public Color paint, accent;
             public int stars;
-            public Spec(string id, string name, CarBodyStyle s, Color p, Color a, int stars) { this.id = id; this.name = name; style = s; paint = p; accent = a; this.stars = stars; }
+            public Spec(string id, string name, CarBodyStyle s, string p, string a, int stars)
+            {
+                this.id = id; this.name = name; style = s; this.stars = stars;
+                ColorUtility.TryParseHtmlString(p, out paint);
+                ColorUtility.TryParseHtmlString(a, out accent);
+            }
         }
 
+        // Colours are the art-brief colours (Docs/ArtBriefs/KimiCarPrompts), so the models and the game agree.
         private static readonly Spec[] Specs =
         {
-            new Spec("blaze", "Blaze", CarBodyStyle.Wedge, new Color(0.93f, 0.16f, 0.12f), Color.white, 0),
-            new Spec("zoom", "Zoom", CarBodyStyle.Bubble, new Color(0.1f, 0.45f, 0.96f), new Color(1f, 0.85f, 0.1f), 1),
-            new Spec("sunny", "Sunny", CarBodyStyle.Muscle, new Color(1f, 0.8f, 0.08f), new Color(0.12f, 0.12f, 0.15f), 2),
-            new Spec("mint", "Mint", CarBodyStyle.Wedge, new Color(0.18f, 0.8f, 0.52f), Color.white, 4),
-            new Spec("grape", "Grape", CarBodyStyle.Bubble, new Color(0.56f, 0.3f, 0.92f), new Color(1f, 0.6f, 0.9f), 5),
-            new Spec("tango", "Tango", CarBodyStyle.Muscle, new Color(1f, 0.48f, 0.08f), Color.white, 7),
-            new Spec("frost", "Frost", CarBodyStyle.Wedge, new Color(0.9f, 0.95f, 1f), new Color(0.15f, 0.65f, 1f), 8),
-            new Spec("bolt", "Bolt", CarBodyStyle.Bubble, new Color(1f, 0.36f, 0.66f), new Color(0.2f, 0.9f, 1f), 9),
+            new Spec("blaze", "Blaze", CarBodyStyle.Wedge, "#ED291F", "#FFFFFF", 0),
+            new Spec("zoom", "Zoom", CarBodyStyle.Bubble, "#1A73F5", "#FFD91A", 1),
+            new Spec("sunny", "Sunny", CarBodyStyle.Muscle, "#FFCC14", "#1F1F26", 2),
+            new Spec("mint", "Mint", CarBodyStyle.Wedge, "#2ECC85", "#FFFFFF", 4),
+            new Spec("grape", "Grape", CarBodyStyle.Bubble, "#8F4CEB", "#FF99E6", 5),
+            new Spec("tango", "Tango", CarBodyStyle.Muscle, "#FF7A14", "#FFFFFF", 7),
+            new Spec("frost", "Frost", CarBodyStyle.Wedge, "#E6F2FF", "#26A6FF", 8),
+            new Spec("bolt", "Bolt", CarBodyStyle.Bubble, "#FF5CA8", "#33E6FF", 9),
+        };
+
+        /// <summary>Fixed colours of the shared material slots (sRGB hex from the art brief).</summary>
+        private static readonly Dictionary<string, string> SlotColors = new Dictionary<string, string>
+        {
+            { "Trim", "#26262E" }, { "Glass", "#1F2B47" }, { "Tyre", "#1A1A1F" }, { "Rim", "#8C93A3" },
+            { "HeadLight", "#FFF7D6" }, { "TailLight", "#FF2A1F" }, { "Glow", "#33E6FF" },
         };
 
         public static CarDefinition[] BuildAll(RaceMaterials mats)
         {
-            var meshes = new Dictionary<string, Mesh>();
             var defs = new List<CarDefinition>();
             Mesh shadow = ShadowQuad();
             foreach (Spec sp in Specs)
             {
-                string key = sp.style + "_" + ColorUtility.ToHtmlStringRGB(sp.accent);
-                if (!meshes.TryGetValue(key, out Mesh mesh))
-                {
-                    mesh = EditorAssets.SaveMesh(Body(sp.style, sp.accent), $"Assets/Art/Models/Vehicles/Car_{key}.asset");
-                    meshes[key] = mesh;
-                }
+                string fbx = $"{SourceFolder}/Car_{sp.id}.fbx";
+                AssetDatabase.ImportAsset(fbx, ImportAssetOptions.ForceUpdate); // applies CarModelImport settings
+                var model = AssetDatabase.LoadAssetAtPath<GameObject>(fbx);
+                if (model == null) throw new System.Exception("Car model missing: " + fbx + " (run Tools/setup.sh, which copies Art/Cars/*/Car_*.fbx)");
+
                 Material mat = EditorAssets.Material($"Assets/Art/Materials/Cars/Car_{sp.id}.mat", ArtBuilder.VertexLit);
                 mat.CopyPropertiesFromMaterial(mats.carBase);
                 mat.SetColor("_Paint", sp.paint);
                 mat.SetFloat("_Gloss", 0.55f);
                 EditorUtility.SetDirty(mat);
 
-                GameObject prefab = Prefab(sp, mesh, mat, shadow, mats.blobShadow);
+                GameObject prefab = Prefab(sp, model, mat, shadow, mats.blobShadow);
                 CarDefinition def = EditorAssets.LoadOrCreateSO<CarDefinition>($"Assets/ScriptableObjects/Cars/Car_{sp.id}.asset");
                 def.id = sp.id;
                 def.displayName = sp.name;
@@ -70,15 +86,51 @@ namespace TurboRush.EditorTools
             return defs.ToArray();
         }
 
-        private static GameObject Prefab(Spec sp, Mesh mesh, Material mat, Mesh shadowMesh, Material shadowMat)
+        private static GameObject Prefab(Spec sp, GameObject model, Material mat, Mesh shadowMesh, Material shadowMat)
         {
+            string dir = "Assets/Art/Models/Vehicles/" + sp.id;
+            Transform src = model.transform;
             var root = new GameObject("Car_" + sp.id);
             var body = new GameObject("Body");
             body.transform.SetParent(root.transform, false);
-            body.AddComponent<MeshFilter>().sharedMesh = mesh;
-            var mr = body.AddComponent<MeshRenderer>();
-            mr.sharedMaterial = mat;
-            Lean(mr);
+
+            // The game's cars face +Z with their left at -X. The FBX importer's axis conversion can turn or mirror the model,
+            // so derive the correction from where the named wheels landed (a mirror also flips the triangle winding).
+            Vector3 fl = src.InverseTransformPoint(Find(src, "Wheel_FL").position), rl = src.InverseTransformPoint(Find(src, "Wheel_RL").position);
+            Matrix4x4 face = Matrix4x4.Scale(new Vector3(fl.x < 0f ? 1f : -1f, 1f, fl.z > rl.z ? 1f : -1f));
+
+            var lod0 = new List<Renderer>();
+            Mesh bodyMesh = EditorAssets.SaveMesh(Convert(Find(src, "Body"), src, face, Vector3.zero, sp, "Body"), $"{dir}/Car_{sp.id}_Body.asset");
+            lod0.Add(AddRenderer(body.transform, bodyMesh, mat));
+
+            var wheels = new Transform[4];
+            float radius = 0f;
+            for (int i = 0; i < 4; i++)
+            {
+                Transform w = Find(src, WheelNames[i]);
+                Vector3 centre = face.MultiplyPoint3x4(src.InverseTransformPoint(w.position));
+                Mesh wm = EditorAssets.SaveMesh(Convert(w, src, face, centre, sp, WheelNames[i]), $"{dir}/Car_{sp.id}_{WheelNames[i]}.asset");
+                var go = new GameObject(WheelNames[i]);
+                go.transform.SetParent(body.transform, false);
+                go.transform.localPosition = centre;
+                lod0.Add(AddRenderer(go.transform, wm, mat));
+                wheels[i] = go.transform;
+                radius = Mathf.Max(radius, centre.y);
+            }
+
+            var lodGo = new GameObject("Body_LOD1");
+            lodGo.transform.SetParent(body.transform, false);
+            Mesh lodMesh = EditorAssets.SaveMesh(Convert(Find(src, "Body_LOD1"), src, face, Vector3.zero, sp, "LOD1"), $"{dir}/Car_{sp.id}_LOD1.asset");
+            Renderer lod1 = AddRenderer(lodGo.transform, lodMesh, mat);
+
+            var group = root.AddComponent<LODGroup>();
+            group.SetLODs(new[]
+            {
+                new LOD(0.10f, lod0.ToArray()),   // full model while the car is more than 10 % of the screen height
+                new LOD(0.006f, new[] { lod1 }),  // simplified model further away, culled when tiny
+            });
+            group.RecalculateBounds();
+
             var shadow = new GameObject("Shadow");
             shadow.transform.SetParent(root.transform, false);
             shadow.transform.localPosition = new Vector3(0, 0.04f, 0);
@@ -86,13 +138,81 @@ namespace TurboRush.EditorTools
             var smr = shadow.AddComponent<MeshRenderer>();
             smr.sharedMaterial = shadowMat;
             Lean(smr);
+
+            var renderers = new List<Renderer>(lod0) { lod1 };
             var view = root.AddComponent<RacerView>();
-            view.Bind(body.transform, shadow.transform, mr);
+            view.Bind(body.transform, shadow.transform, renderers.ToArray(), wheels, radius);
             string path = $"Assets/Prefabs/Vehicles/Car_{sp.id}.prefab";
             EditorAssets.EnsureFolder("Assets/Prefabs/Vehicles");
             GameObject prefab = PrefabUtility.SaveAsPrefabAsset(root, path);
             Object.DestroyImmediate(root);
             return prefab;
+        }
+
+        private static Transform Find(Transform t, string name)
+        {
+            if (t.name == name) return t;
+            foreach (Transform c in t)
+            {
+                Transform f = Find(c, name);
+                if (f != null) return f;
+            }
+            if (t.parent == null) throw new System.Exception($"{t.name}: part '{name}' not found in the car model");
+            return null;
+        }
+
+        private static MeshRenderer AddRenderer(Transform t, Mesh mesh, Material mat)
+        {
+            t.gameObject.AddComponent<MeshFilter>().sharedMesh = mesh;
+            var mr = t.gameObject.AddComponent<MeshRenderer>();
+            mr.sharedMaterial = mat;
+            Lean(mr);
+            return mr;
+        }
+
+        /// <summary>
+        /// Converts an FBX part into a flat-shaded vertex-colour mesh in car space (relative to <paramref name="origin"/>):
+        /// one vertex per triangle corner, colour from the material slot name, paint mask on Paint, emission on lights.
+        /// </summary>
+        public static Mesh Convert(Transform part, Transform car, Matrix4x4 face, Vector3 origin, Color accent, string name)
+        {
+            var mf = part.GetComponent<MeshFilter>();
+            var mr = part.GetComponent<MeshRenderer>();
+            if (mf == null || mr == null || mf.sharedMesh == null) throw new System.Exception(part.name + " has no mesh");
+            Mesh src = mf.sharedMesh;
+            Matrix4x4 m = face * car.worldToLocalMatrix * part.localToWorldMatrix;
+            Vector3[] v = src.vertices;
+            var kit = new MeshKit();
+            Material[] slots = mr.sharedMaterials;
+            for (int s = 0; s < src.subMeshCount; s++)
+            {
+                string slot = s < slots.Length && slots[s] != null ? slots[s].name.Split('.')[0].Split(' ')[0] : "Trim";
+                Color col = SlotColor(slot, accent, out bool paint, out bool glow);
+                kit.PaintMask = paint;
+                kit.Emission = glow ? 1f : 0f;
+                int[] tris = src.GetTriangles(s);
+                bool flip = face.determinant < 0f;
+                for (int i = 0; i < tris.Length; i += 3)
+                {
+                    Vector3 a = m.MultiplyPoint3x4(v[tris[i]]) - origin, b = m.MultiplyPoint3x4(v[tris[i + 1]]) - origin, c = m.MultiplyPoint3x4(v[tris[i + 2]]) - origin;
+                    if (flip) kit.Tri(a, c, b, col); else kit.Tri(a, b, c, col);
+                }
+            }
+            return kit.ToMesh(name);
+        }
+
+        private static Mesh Convert(Transform part, Transform car, Matrix4x4 face, Vector3 origin, Spec sp, string name) =>
+            Convert(part, car, face, origin, sp.accent, $"Car_{sp.id}_{name}");
+
+        public static Color SlotColor(string slot, Color accent, out bool paint, out bool glow)
+        {
+            paint = slot == "Paint";
+            glow = slot == "HeadLight" || slot == "TailLight" || slot == "Glow";
+            Color c = Color.white;
+            if (slot == "Accent") c = accent;
+            else if (SlotColors.TryGetValue(slot, out string hex)) ColorUtility.TryParseHtmlString(hex, out c);
+            // Vertex colours are used as-is by the shader (linear project), so convert the sRGB brief colours.
+            return paint ? Color.white : c.linear;
         }
 
         private static void Lean(MeshRenderer r)
@@ -112,147 +232,6 @@ namespace TurboRush.EditorTools
             m.normals = new[] { Vector3.up, Vector3.up, Vector3.up, Vector3.up };
             m.RecalculateBounds();
             return EditorAssets.SaveMesh(m, "Assets/Art/Models/Vehicles/CarShadow.asset");
-        }
-
-        // ---------------- body construction ----------------
-
-        private struct Station { public float z, w, b, t; public Station(float z, float w, float b, float t) { this.z = z; this.w = w; this.b = b; this.t = t; } }
-
-        public static Mesh Body(CarBodyStyle style, Color accent)
-        {
-            Station[] st;
-            float cab0, cab1, cabH, cabTopW, roofPaint;
-            switch (style)
-            {
-                case CarBodyStyle.Bubble:
-                    st = new[] { new Station(-1.95f, 0.82f, 0.3f, 0.86f), new Station(-1.6f, 0.92f, 0.26f, 0.98f), new Station(-0.6f, 0.95f, 0.26f, 1.0f),
-                                 new Station(0.5f, 0.95f, 0.26f, 0.96f), new Station(1.45f, 0.9f, 0.27f, 0.8f), new Station(1.95f, 0.76f, 0.3f, 0.6f) };
-                    cab0 = -1.35f; cab1 = 0.75f; cabH = 0.62f; cabTopW = 0.66f; roofPaint = 1f;
-                    break;
-                case CarBodyStyle.Muscle:
-                    st = new[] { new Station(-2.15f, 0.9f, 0.26f, 0.9f), new Station(-1.8f, 0.97f, 0.24f, 0.94f), new Station(-0.9f, 0.98f, 0.24f, 0.9f),
-                                 new Station(0.3f, 0.98f, 0.24f, 0.84f), new Station(1.6f, 0.96f, 0.25f, 0.8f), new Station(2.2f, 0.88f, 0.28f, 0.66f) };
-                    cab0 = -1.35f; cab1 = 0.25f; cabH = 0.5f; cabTopW = 0.7f; roofPaint = 0f;
-                    break;
-                default: // Wedge
-                    st = new[] { new Station(-2.1f, 0.86f, 0.25f, 0.84f), new Station(-1.7f, 0.95f, 0.22f, 0.9f), new Station(-0.7f, 0.97f, 0.22f, 0.84f),
-                                 new Station(0.4f, 0.97f, 0.22f, 0.74f), new Station(1.45f, 0.92f, 0.23f, 0.58f), new Station(2.15f, 0.78f, 0.25f, 0.44f) };
-                    cab0 = -1.2f; cab1 = 0.55f; cabH = 0.46f; cabTopW = 0.62f; roofPaint = 1f;
-                    break;
-            }
-
-            var k = new MeshKit();
-            Color white = Color.white, glass = new Color(0.12f, 0.17f, 0.28f), dark = new Color(0.1f, 0.1f, 0.12f), chrome = new Color(0.5f, 0.53f, 0.6f);
-
-            // Lofted shell (paint).
-            k.PaintMask = true;
-            Vector2[] Section(Station s) => new[]
-            {
-                new Vector2(-s.w * 0.9f, s.b), new Vector2(-s.w, s.b + 0.16f), new Vector2(-s.w, s.t - 0.16f), new Vector2(-s.w * 0.84f, s.t),
-                new Vector2(s.w * 0.84f, s.t), new Vector2(s.w, s.t - 0.16f), new Vector2(s.w, s.b + 0.16f), new Vector2(s.w * 0.9f, s.b)
-            };
-            for (int i = 0; i < st.Length - 1; i++)
-            {
-                Vector2[] a = Section(st[i]), b = Section(st[i + 1]);
-                for (int j = 0; j < a.Length - 1; j++)
-                {
-                    Vector3 a0 = new Vector3(a[j].x, a[j].y, st[i].z), a1 = new Vector3(a[j + 1].x, a[j + 1].y, st[i].z);
-                    Vector3 b0 = new Vector3(b[j].x, b[j].y, st[i + 1].z), b1 = new Vector3(b[j + 1].x, b[j + 1].y, st[i + 1].z);
-                    k.Quad(a0, b0, b1, a1, white);
-                }
-            }
-            // caps
-            Vector2[] rear = Section(st[0]), front = Section(st[st.Length - 1]);
-            for (int j = 1; j < rear.Length - 1; j++)
-            {
-                k.Tri(new Vector3(rear[0].x, rear[0].y, st[0].z), new Vector3(rear[j].x, rear[j].y, st[0].z), new Vector3(rear[j + 1].x, rear[j + 1].y, st[0].z), white);
-                float zf = st[st.Length - 1].z;
-                k.Tri(new Vector3(front[0].x, front[0].y, zf), new Vector3(front[j + 1].x, front[j + 1].y, zf), new Vector3(front[j].x, front[j].y, zf), white);
-            }
-            k.PaintMask = false;
-            // underside
-            float zr = st[0].z, zfr = st[st.Length - 1].z;
-            k.Quad(new Vector3(0.8f, 0.23f, zr), new Vector3(0.8f, 0.23f, zfr), new Vector3(-0.8f, 0.23f, zfr), new Vector3(-0.8f, 0.23f, zr), dark);
-
-            // Cabin: glass sides, painted or accent roof.
-            float baseY = Mathf.Lerp(TopAt(st, cab0), TopAt(st, cab1), 0.5f) - 0.03f;
-            float wb = 0.86f, wt = cabTopW;
-            float r0 = cab0 + 0.35f, r1 = cab1 - 0.55f;
-            Vector3 bl0 = new Vector3(-wb, TopAt(st, cab0) - 0.02f, cab0), br0 = new Vector3(wb, TopAt(st, cab0) - 0.02f, cab0);
-            Vector3 bl1 = new Vector3(-wb, TopAt(st, cab1) - 0.02f, cab1), br1 = new Vector3(wb, TopAt(st, cab1) - 0.02f, cab1);
-            float roofY = baseY + cabH;
-            Vector3 tl0 = new Vector3(-wt, roofY, r0), tr0 = new Vector3(wt, roofY, r0), tl1 = new Vector3(-wt, roofY, r1), tr1 = new Vector3(wt, roofY, r1);
-            k.Quad(bl1, tl1, tl0, bl0, glass);   // left side faces −x
-            k.Quad(br0, tr0, tr1, br1, glass);   // right side
-            k.Quad(br1, tr1, tl1, bl1, glass);   // windscreen faces +z
-            k.Quad(bl0, tl0, tr0, br0, glass);   // rear window
-            k.PaintMask = roofPaint > 0.5f;
-            k.Quad(tl0, tl1, tr1, tr0, k.PaintMask ? white : accent); // roof
-            k.PaintMask = false;
-            // window pillars (thin painted strips) for a friendlier look
-            k.PaintMask = true;
-            Vector3 nOff = new Vector3(0f, 0.55f, 0.83f) * 0.012f;
-            k.Quad(bl1 + new Vector3(0.16f, 0, 0) + nOff, tl1 + new Vector3(0.14f, 0, 0) + nOff, tl1 + nOff, bl1 + nOff, white);
-            k.Quad(br1 + nOff, tr1 + nOff, tr1 - new Vector3(0.14f, 0, 0) + nOff, br1 - new Vector3(0.16f, 0, 0) + nOff, white);
-            k.PaintMask = false;
-
-            // Wheels.
-            float wheelR = style == CarBodyStyle.Bubble ? 0.4f : 0.37f, wheelW = 0.32f;
-            float zf2 = zfr - 0.75f, zr2 = zr + 0.7f;
-            foreach (float z in new[] { zr2, zf2 })
-            foreach (float side in new[] { -1f, 1f })
-            {
-                float x = side * (st[2].w - wheelW * 0.35f);
-                Vector3 c = new Vector3(x - side * wheelW * 0.5f, wheelR, z);
-                k.Prism(c, Vector3.right * side, wheelR, wheelR, wheelW, 10, dark, 0f, chrome);
-            }
-
-            // Lights (emissive).
-            k.Emission = 1f;
-            float ry = Mathf.Lerp(st[0].b, st[0].t, 0.62f);
-            foreach (float side in new[] { -1f, 1f })
-            {
-                k.Box(new Vector3(side * st[0].w * 0.6f, ry, zr - 0.01f), new Vector3(0.42f, 0.14f, 0.06f), Quaternion.identity, new Color(1f, 0.12f, 0.1f));
-                Station f = st[st.Length - 1];
-                k.Box(new Vector3(side * f.w * 0.58f, Mathf.Lerp(f.b, f.t, 0.55f), zfr + 0.01f), new Vector3(0.34f, 0.12f, 0.06f), Quaternion.identity, new Color(1f, 0.97f, 0.8f));
-            }
-            k.Emission = 0f;
-
-            // Accent: side skirts and (Wedge) rear wing, (Muscle) bonnet stripe.
-            foreach (float side in new[] { -1f, 1f })
-                k.Box(new Vector3(side * (st[2].w + 0.01f), 0.34f, (zr2 + zf2) * 0.5f), new Vector3(0.06f, 0.12f, (zf2 - zr2) - wheelR * 2.2f), Quaternion.identity, accent);
-            if (style == CarBodyStyle.Wedge)
-            {
-                float wy = st[0].t + 0.3f;
-                k.Box(new Vector3(-0.55f, wy - 0.15f, zr + 0.25f), new Vector3(0.08f, 0.3f, 0.18f), Quaternion.identity, dark);
-                k.Box(new Vector3(0.55f, wy - 0.15f, zr + 0.25f), new Vector3(0.08f, 0.3f, 0.18f), Quaternion.identity, dark);
-                k.Box(new Vector3(0f, wy, zr + 0.2f), new Vector3(1.75f, 0.07f, 0.42f), Quaternion.Euler(-6f, 0, 0), accent);
-            }
-            else if (style == CarBodyStyle.Muscle)
-            {
-                for (int i = 2; i < st.Length - 1; i++)
-                {
-                    float za = i == 2 ? cab1 : st[i].z, zb = st[i + 1].z;
-                    if (zb <= za) continue;
-                    k.Quad(new Vector3(-0.2f, TopAt(st, za) + 0.012f, za), new Vector3(-0.2f, TopAt(st, zb) + 0.012f, zb),
-                           new Vector3(0.2f, TopAt(st, zb) + 0.012f, zb), new Vector3(0.2f, TopAt(st, za) + 0.012f, za), accent);
-                }
-            }
-            else
-            {
-                // Bubble: little roof light bar
-                k.Box(new Vector3(0f, roofY + 0.05f, (r0 + r1) * 0.5f), new Vector3(0.7f, 0.08f, 0.2f), Quaternion.identity, accent);
-            }
-
-            Mesh m = k.ToMesh("Car_" + style);
-            return m;
-        }
-
-        private static float TopAt(Station[] st, float z)
-        {
-            for (int i = 0; i < st.Length - 1; i++)
-                if (z >= st[i].z && z <= st[i + 1].z) return Mathf.Lerp(st[i].t, st[i + 1].t, (z - st[i].z) / (st[i + 1].z - st[i].z));
-            return z < st[0].z ? st[0].t : st[st.Length - 1].t;
         }
     }
 }

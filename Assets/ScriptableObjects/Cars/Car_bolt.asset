@@ -15,8 +15,8 @@ MonoBehaviour:
   id: bolt
   displayName: Bolt
   bodyStyle: 1
-  paint: {r: 1, g: 0.36, b: 0.66, a: 1}
-  accent: {r: 0.2, g: 0.9, b: 1, a: 1}
+  paint: {r: 1, g: 0.36078432, b: 0.65882355, a: 1}
+  accent: {r: 0.2, g: 0.9019608, b: 1, a: 1}
   unlockStars: 9
   prefab: {fileID: 2674470528968034315, guid: 43bfdf58a49dc8f99b1fe08d5e41ed9a, type: 3}
   portrait: {fileID: 0}

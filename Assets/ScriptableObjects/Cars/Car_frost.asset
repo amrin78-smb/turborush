@@ -15,8 +15,8 @@ MonoBehaviour:
   id: frost
   displayName: Frost
   bodyStyle: 0
-  paint: {r: 0.9, g: 0.95, b: 1, a: 1}
-  accent: {r: 0.15, g: 0.65, b: 1, a: 1}
+  paint: {r: 0.9019608, g: 0.9490196, b: 1, a: 1}
+  accent: {r: 0.14901961, g: 0.6509804, b: 1, a: 1}
   unlockStars: 8
   prefab: {fileID: 6325219594108407125, guid: a1b6046ebea99c90c8a8e02c85d29db8, type: 3}
   portrait: {fileID: 0}

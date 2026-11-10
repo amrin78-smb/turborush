@@ -15,8 +15,8 @@ MonoBehaviour:
   id: sunny
   displayName: Sunny
   bodyStyle: 2
-  paint: {r: 1, g: 0.8, b: 0.08, a: 1}
-  accent: {r: 0.12, g: 0.12, b: 0.15, a: 1}
+  paint: {r: 1, g: 0.8, b: 0.078431375, a: 1}
+  accent: {r: 0.12156863, g: 0.12156863, b: 0.14901961, a: 1}
   unlockStars: 2
   prefab: {fileID: 6352018553776673316, guid: 32fdc488071a591aca04e58e75f80130, type: 3}
   portrait: {fileID: 0}

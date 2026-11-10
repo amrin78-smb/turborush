@@ -1,6 +1,6 @@
 # Turbo Rush 3D: project status
 
-_Last updated: 2026-11-10. Version 0.2.0 (versionCode 2): M9 slopes, jumps and a fourth track. 0.1.0 is GitHub release v0.1.0._
+_Last updated: 2026-11-10. Version 0.3.0 (versionCode 3): M7 proper 3D car models. Earlier: 0.2.0 (M9), 0.1.0 (RC)._
 
 Owner feedback 2026-11-10: "It plays well" (informal; the Redmi A3 checklist below has not been filled in yet).
 
@@ -85,7 +85,7 @@ because Unity's deny list makes PowerVR devices skip Vulkan and fall through to 
 ## Next milestones (proposed after RC 0.1.0; the GDD's milestones are complete)
 | Milestone | Scope | State |
 |---|---|---|
-| M7: Proper car models | 8 original Blender models made with Kimi from `Docs/ArtBriefs/` (prompts zip). A Unity import step turns the material slots into vertex colour, paint mask and emission, and generates prefabs with spinning and steering wheels and an LOD1 for distant AI cars. Cars without a model keep the procedural mesh. | Prompts delivered; waiting for the models |
+| M7: Proper car models | 8 original Blender models (`Art/Cars/`): Blaze, Zoom, Sunny, Mint by Kimi; Grape, Tango, Frost, Bolt by Claude (`Tools/Blender/`). `CarBuilder` converts the FBX material slots into vertex colour, paint mask and emission (one material per car), corrects the importer's axes from the wheel names, and builds prefabs with spinning and steering wheels and a LODGroup (LOD1 for distant cars). All 8 pass `Tools/Blender/check_car_fbx.py` and `CarModelTests`. | **Done** in 0.3.0; on-device look and FPS pending |
 | M8: Device validation and performance | Fill in `Docs/REDMI_A3_TEST_CHECKLIST.md` with measured FPS and thermals, and tune the Low preset | Needs the owner's Redmi A3 |
-| M9: More content | GDD "later content": slopes and gentle jumps, plus a 4th track (Hilltop Hops) | **Done** in 0.2.0; device feel pending |
+| M9: More content | GDD "later content": slopes and gentle jumps, plus a 4th track (Hilltop Hops) | **Done** in 0.2.0; device feel pending. Correction: the 0.2.0 record of 46/46 EditMode tests came from a run before the sub-step change; one test (`ShippedJumpsAreOnStraightsAndAITakesThemCleanly`) then failed because it stepped at 1/30 s and missed the one-sub-step landing flag. Fixed in 0.3.0 (test-only; game events were correct). |
 | M10: Polish | Better engine and music audio, a release keystore and store-ready signing | Not started |
