@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased
+- Kimi/Blender prompts for 8 original car models (`Docs/ArtBriefs/`, generator `Tools/gen_kimi_car_prompts.py`).
+
 ## 0.1.0 (versionCode 1) — 2026-11-09, first release candidate
 
 ### M0: Audit and platform foundation

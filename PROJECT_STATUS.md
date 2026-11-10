@@ -1,6 +1,8 @@
 # Turbo Rush 3D: project status
 
-_Last updated: 2026-11-09. Release candidate 0.1.0 (versionCode 1)._
+_Last updated: 2026-11-10. Release candidate 0.1.0 (versionCode 1), published as GitHub release v0.1.0._
+
+Owner feedback 2026-11-10: "It plays well" (informal; the Redmi A3 checklist below has not been filled in yet).
 
 ## Starting state (audit)
 - The repository was empty (new project; no commits, no unrelated work to preserve).
@@ -77,3 +79,11 @@ because Unity's deny list makes PowerVR devices skip Vulkan and fall through to 
 1. Install `Builds/Android/TurboRush3D.apk` on the Redmi A3 and run `Docs/REDMI_A3_TEST_CHECKLIST.md`.
 2. Report FPS, thermals and the relaunch results, then update this file and BUILD_VALIDATION.md.
 3. Tune steering feel (Settings ▸ Steering, or the `CarTuning` defaults in `CarDefinition.cs`) after children have played it.
+
+## Next milestones (proposed after RC 0.1.0; the GDD's milestones are complete)
+| Milestone | Scope | State |
+|---|---|---|
+| M7: Proper car models | 8 original Blender models made with Kimi from `Docs/ArtBriefs/` (prompts zip). A Unity import step turns the material slots into vertex colour, paint mask and emission, and generates prefabs with spinning and steering wheels and an LOD1 for distant AI cars. Cars without a model keep the procedural mesh. | Prompts delivered; waiting for the models |
+| M8: Device validation and performance | Fill in `Docs/REDMI_A3_TEST_CHECKLIST.md` with measured FPS and thermals, and tune the Low preset | Needs the owner's Redmi A3 |
+| M9: More content | GDD "later content": slopes and gentle jumps, plus a 4th track | Not started |
+| M10: Polish | Better engine and music audio, a release keystore and store-ready signing | Not started |
