@@ -73,23 +73,25 @@ def prism(profile_yz, x0, x1, mat, bevel=0.0, segments=1):
 
 
 def lathe(profile, sides, mats, matrix=Matrix(), jitter=None):
-    """Revolve [(r, x), ...] around the X axis. mats[i] is the material of segment i (profile[i] -> profile[i+1]).
+    """Revolve [(r, x) or (r, x, twist_radians), ...] around the X axis.
+    mats[i] is the material of segment i (profile[i] -> profile[i+1]): a name, or a function side_index -> name.
     jitter(point_index, side_index) -> radius scale (for knobbly treads). r == 0 makes a single pole vertex."""
     bm = bmesh.new()
     rings = []
-    for pi, (r, x) in enumerate(profile):
+    for pi, pt in enumerate(profile):
+        r, x = pt[0], pt[1]
+        tw = pt[2] if len(pt) > 2 else 0.0
         if r == 0:
             rings.append([bm.verts.new((x, 0, 0))])
             continue
         ring = []
         for s in range(sides):
-            t = 2 * math.pi * s / sides
+            t = 2 * math.pi * s / sides + tw
             rr = r * (jitter(pi, s) if jitter else 1.0)
             ring.append(bm.verts.new((x, rr * math.cos(t), rr * math.sin(t))))
         rings.append(ring)
     for i in range(len(rings) - 1):
         A, B = rings[i], rings[i + 1]
-        mi = MATS.index(mats[i])
         for s in range(sides):
             t = (s + 1) % sides
             if len(A) == 1:
@@ -98,7 +100,8 @@ def lathe(profile, sides, mats, matrix=Matrix(), jitter=None):
                 f = bm.faces.new([A[s], A[t], B[0]])
             else:
                 f = bm.faces.new([A[s], A[t], B[t], B[s]])
-            f.material_index = mi
+            m = mats[i](s) if callable(mats[i]) else mats[i]
+            f.material_index = MATS.index(m)
     bmesh.ops.transform(bm, matrix=matrix, verts=bm.verts[:])
     return _finish_part(bm, None)
 
@@ -246,6 +249,7 @@ def face_mean(ob, matname):
 
 
 def finish(car_id, root, body, wheels, lod, out_dir, limits=None):
+    """limits: dict(length=(lo, hi), width=..., height=...) from the car's spec."""
     lim = dict(length=(4.05, 4.15), width=(1.95, 2.05), height=(1.52, 1.68))
     if limits:
         lim.update(limits)
@@ -394,3 +398,77 @@ def add_wheels(root, colors, front_y, rear_y, track, radius, make_wheel):
             name = f"Wheel_{key}{side}"
             wheels[name] = mb.build(name, colors, root, (sx * track / 2, y, radius))
     return wheels
+
+
+# ---------------------------------------------------------------- lofted bodies
+
+def mirrored_ring(y, right):
+    """Closed ring at depth y from right-side (x, z) points listed bottom -> top; the left side is mirrored.
+    Edges: k = 0..n-2 right side, n-1 the top bridge, n..2n-2 the left side, 2n-1 the bottom bridge."""
+    pts = [(x, y, z) for x, z in right] + [(-x, y, z) for x, z in reversed(right)]
+    return pts
+
+
+def edge_kind(j, n):
+    """Map a ring edge index to the side-profile edge k (same for both sides), 'top' or 'bottom'."""
+    if j < n - 1: return j
+    if j == n - 1: return "top"
+    if j < 2 * n - 1: return 2 * n - 2 - j
+    return "bottom"
+
+
+def loft(rings, matfn, cap0="Trim", cap1="Trim"):
+    """Skin consecutive rings (lists of (x, y, z), same length, made by mirrored_ring).
+    matfn(segment_index, edge_kind) -> material name."""
+    bm = bmesh.new()
+    vs = [[bm.verts.new(p) for p in ring] for ring in rings]
+    m = len(rings[0]); n = m // 2
+    for i in range(len(vs) - 1):
+        A, B = vs[i], vs[i + 1]
+        for j in range(m):
+            k = (j + 1) % m
+            f = bm.faces.new([A[j], A[k], B[k], B[j]])
+            f.material_index = MATS.index(matfn(i, edge_kind(j, n)))
+    f0 = bm.faces.new(vs[0]); f0.material_index = MATS.index(cap0)
+    f1 = bm.faces.new(list(reversed(vs[-1]))); f1.material_index = MATS.index(cap1)
+    bmesh.ops.dissolve_degenerate(bm, dist=1e-5, edges=bm.edges[:])
+    return _finish_part(bm, None)
+
+
+def body_ring(y, W, zb, zbelt, zdeck, wdeck, crown=0.04, wheel=False, inset=0.60, sh=0.07):
+    """Lower body cross-section (right side, bottom -> top): a=bottom, b=lower side, c=belt, s=shoulder, d=deck edge, e=crown.
+    In a wheel zone the lower side steps in to `inset` (the wheel well) and the belt becomes the arch shelf."""
+    if wheel:
+        a, b = (inset - 0.04, zb + 0.10), (inset, zbelt - 0.03)
+    else:
+        a, b = (W - 0.07, zb), (W, zb + 0.08)
+    right = [a, b, (W, zbelt), (W - sh, zbelt + sh * 0.8), (wdeck, zdeck), (wdeck * 0.45, zdeck + crown)]
+    return mirrored_ring(y, right)
+
+
+def body_mats(i, k):
+    return "Trim" if k == "bottom" else "Paint"
+
+
+def spoke_wheel(radius, width, spoke_mat="Rim", gap_mat="Trim", spokes=lambda s: s % 2 == 0, twist=0.0,
+                rim_ratio=0.62, hub_mat=None, sides=12, matrix=Matrix()):
+    """Right-hand wheel (spin axis X, face toward +X) with painted spokes in a recessed rim. 168 tris at 12 sides.
+    The tread has a vertex at the very bottom (side index sides*3/4), so the tyre touches Z = -radius exactly."""
+    h = width / 2
+    rr = radius * rim_ratio
+    prof = [(0, -h), (radius, -0.7 * h), (radius, 0.7 * h), (radius * 0.94, h), (rr, h),
+            (rr * 0.9, 0.5 * h), (radius * 0.2, 0.5 * h, twist), (radius * 0.13, h + 0.01, twist), (0, h + 0.01)]
+    mats = ["Tyre", "Tyre", "Tyre", "Tyre", spoke_mat,
+            lambda s: spoke_mat if spokes(s) else gap_mat, spoke_mat, hub_mat or spoke_mat]
+    return lathe(prof, sides, mats, matrix)
+
+
+def spec_limits(length, width, height, tol=0.05, htol=0.08):
+    return dict(length=(length - tol, length + tol), width=(width - tol, width + tol), height=(height - htol, height + htol))
+
+
+def lod_wheels(mb, front_y, rear_y, track, radius, rim_mat="Rim", width=0.30):
+    """Blocky 8-sided wheels baked into a LOD mesh."""
+    for y in (front_y, rear_y):
+        x0 = track / 2 - width / 2
+        mb.add(cylinder((x0, y, radius), (x0 + width, y, radius), radius, "Tyre", 8, cap_mat=rim_mat), mirror=True)
