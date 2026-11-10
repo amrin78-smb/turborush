@@ -51,6 +51,15 @@ Screenshots: `Docs/screenshots/` (contact sheet: `layout_contact_sheet.png`).
 **Pending physical-device validation.** No device was attached to the build machine.
 Second-launch regression, FPS, thermals, selected graphics API: follow `Docs/REDMI_A3_TEST_CHECKLIST.md` and record the results here.
 
+## 0.3.2 (versionCode 5): louder engine, release APK, 2026-11-10
+`Tools/verify_apk.sh` **PASS** (`Docs/validation/RC_0.3.2_release_apk.txt`): `arm64-v8a` + `armeabi-v7a`, PowerVR filter packaged,
+landscape, VIBRATE only (no INTERNET). Size 54,307,909 bytes · SHA-256 `930498db4cfba3dd04f83d5f9dc42c0aca7bba875fcece14eda85c20a2d5f53a`.
+Tests: EditMode 51/51, PlayMode 3/3 (`Docs/validation/*-results.xml`). Engine loop measured in the editor: RMS 0.620, peak 0.837
+(old loop RMS about 0.16). Whether the new level sounds right on the Redmi A3: **Pending physical-device validation**.
+
+Owner report on 0.3.1 (informal, 2026-11-10): installed on the Redmi A3, "works fine, very smooth play"; engine too soft (fixed above).
+No FPS or thermal numbers were recorded, so the checklist items stay open.
+
 ## 0.3.1 (versionCode 4): app icon and splash, release APK, 2026-11-10
 Same checks as 0.3.0, all **PASS** (`Docs/validation/RC_0.3.1_release_apk.txt`): both ABIs, PowerVR filter, landscape, no INTERNET.
 Size 54,307,889 bytes · SHA-256 `88cfb1853fd52da408a7d761c272cc9d3484a562e098a0b52dd940eef1cc8228`. The APK's launcher icon is an adaptive icon XML; the packaged 432 px background,

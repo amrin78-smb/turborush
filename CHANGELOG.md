@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.2 (versionCode 5) — 2026-11-10: louder engine
+- Owner feedback from the Redmi A3 (0.3.1): plays fine and smoothly, but the engine was too soft.
+- The engine loop was almost all below 300 Hz, which phone speakers barely play. `AudioSynth` now builds it from 12 harmonics with
+  gentle saturation (still a smooth 1 s loop). Overall level about 4× the old loop, mix level 0.45 → 0.7, idle floor 55 % → 70 %.
+- New test `EngineLoopIsAudibleOnAPhoneSpeaker` (level, upper-harmonic content, no clipping, smooth loop seam).
+
 ## 0.3.1 (versionCode 4) — 2026-11-10: app icon and splash logo
 - **Launcher icon**: Blaze rendered in-engine (front 3/4, friendly headlight "eyes") on a bright blue background with speed lines.
   Android adaptive icon (background + transparent foreground inside the safe zone), round and legacy icons (`AppIconBuilder`).

@@ -1,0 +1,28 @@
+APK: Builds/Android/TurboRush3D.apk (52M)  aapt: /home/amrin/Unity/Hub/Editor/6000.3.27f2/Editor/Data/PlaybackEngines/AndroidPlayer/SDK/build-tools/36.0.0/aapt
+$ aapt dump badging <apk> | grep native-code
+native-code: 'arm64-v8a' 'armeabi-v7a'
+package: name='com.studio.turborush3d' versionCode='5' versionName='0.3.2' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'
+sdkVersion:'25'
+targetSdkVersion:'36'
+uses-permission: name='android.permission.VIBRATE'
+application-label:'Turbo Rush 3D'
+OK   native code: arm64-v8a + armeabi-v7a
+$ grep -rlaF '.*PowerVR.*' assets/bin/Data/
+assets/bin/Data/globalgamemanagers.assets.split11
+OK   PowerVR Vulkan deny filter present in packaged player data
+     file: globalgamemanagers
+     file: globalgamemanagers.assets.split0
+     file: globalgamemanagers.assets.split1
+     file: globalgamemanagers.assets.split10
+     file: globalgamemanagers.assets.split11
+     file: globalgamemanagers.assets.split2
+     file: globalgamemanagers.assets.split3
+     file: globalgamemanagers.assets.split4
+     file: globalgamemanagers.assets.split5
+     file: globalgamemanagers.assets.split6
+     file: globalgamemanagers.assets.split7
+     file: globalgamemanagers.assets.split8
+     file: globalgamemanagers.assets.split9
+OK   landscape orientation (        A: android:screenOrientation(0x0101001e)=(type 0x10)0xb)
+OK   no INTERNET permission
+VERIFY: PASS

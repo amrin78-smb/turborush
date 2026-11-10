@@ -1,8 +1,8 @@
 # Turbo Rush 3D: project status
 
-_Last updated: 2026-11-10. Version 0.3.1 (versionCode 4): app icon and splash logo. 0.3.0: M7 proper 3D car models. Earlier: 0.2.0 (M9), 0.1.0 (RC)._
+_Last updated: 2026-11-10. Version 0.3.2 (versionCode 5): louder engine sound. 0.3.1: app icon and splash logo. 0.3.0: M7 proper 3D car models. Earlier: 0.2.0 (M9), 0.1.0 (RC)._
 
-Owner feedback 2026-11-10: "It plays well" (informal; the Redmi A3 checklist below has not been filled in yet).
+Owner feedback 2026-11-10: "It plays well"; on 0.3.1: "works fine, very smooth play", engine too soft (fixed in 0.3.2). Informal reports: the Redmi A3 checklist below (FPS, thermals, relaunch) has not been filled in yet.
 
 ## Starting state (audit)
 - The repository was empty (new project; no commits, no unrelated work to preserve).

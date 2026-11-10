@@ -20,6 +20,7 @@ namespace TurboRush.EditorTools
         public static AudioLibrary BuildAll()
         {
             var lib = EditorAssets.LoadOrCreateSO<AudioLibrary>("Assets/ScriptableObjects/AudioLibrary.asset");
+            lib.engineVolume = 0.7f; // mix level lives in the generator (owner feedback 0.3.1: engine too soft)
             lib.engineLoop = Save(SfxDir + "engine_loop.wav", Engine(), false, true);
             lib.offroadLoop = Save(SfxDir + "offroad_loop.wav", Rumble(), false, true);
             var sfx = new AudioClip[Enum.GetValues(typeof(Sfx)).Length];
@@ -147,19 +148,29 @@ namespace TurboRush.EditorTools
         }
 
         /// <summary>1 s seamless loop: every partial is an integer number of Hz, so the loop point is phase-continuous.</summary>
+        /// <summary>
+        /// Engine loop (1 s, seamless: every partial is a multiple of 31 Hz). Phone speakers barely reproduce
+        /// anything below ~300 Hz, so the tone carries harmonics up to 12×62 Hz and is gently saturated,
+        /// which keeps it audible on a small speaker without sounding harsh.
+        /// </summary>
         private static float[] Engine()
         {
             int n = Rate;
             var d = new float[n];
+            const float f = 62f;
+            float peak = 0f;
             for (int i = 0; i < n; i++)
             {
                 float t = i / (float)Rate;
-                float f = 62f;
-                float s = Mathf.Sin(2 * Mathf.PI * f * t) * 0.55f + Mathf.Sin(2 * Mathf.PI * 2 * f * t) * 0.3f + Mathf.Sin(2 * Mathf.PI * 3 * f * t) * 0.16f
-                          + Mathf.Sin(2 * Mathf.PI * 4 * f * t) * 0.08f + Mathf.Sin(2 * Mathf.PI * 31f * t) * 0.12f;
-                float am = 0.82f + 0.18f * Mathf.Sin(2 * Mathf.PI * 31f * t);
-                d[i] = s * am * 0.42f;
+                float s = 0f;
+                for (int h = 1; h <= 12; h++)
+                    s += Mathf.Sin(2 * Mathf.PI * h * f * t + h * 0.7f) / Mathf.Pow(h, 1.25f);
+                s += 0.15f * Mathf.Sin(2 * Mathf.PI * 31f * t);
+                s *= 0.8f + 0.2f * Mathf.Sin(2 * Mathf.PI * 31f * t);
+                d[i] = (float)Math.Tanh(1.6f * s);
+                peak = Mathf.Max(peak, Mathf.Abs(d[i]));
             }
+            for (int i = 0; i < n; i++) d[i] *= 0.85f / peak;
             return d;
         }
 

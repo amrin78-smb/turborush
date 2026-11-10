@@ -32,4 +32,4 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 1fb5469ea5f46a998a51c056e9aed19c, type: 3}
   - {fileID: 8300000, guid: 92f8f222553b0e567b09e687ce743675, type: 3}
   raceMusicVolume: 0.35
-  engineVolume: 0.45
+  engineVolume: 0.7

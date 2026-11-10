@@ -12,7 +12,7 @@ namespace TurboRush.Audio
         public AudioClip offroadLoop;
         public AudioClip[] sfx = new AudioClip[14]; // indexed by Sfx
         [Range(0f, 1f)] public float raceMusicVolume = 0.35f;
-        [Range(0f, 1f)] public float engineVolume = 0.45f;
+        [Range(0f, 1f)] public float engineVolume = 0.7f;
 
         public AudioClip Get(Sfx s)
         {

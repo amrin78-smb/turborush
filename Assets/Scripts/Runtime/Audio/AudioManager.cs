@@ -91,7 +91,7 @@ namespace TurboRush.Audio
             if (on && !m_Engine.isPlaying && m_Engine.clip != null) m_Engine.Play();
             if (!on && m_Engine.isPlaying && m_Engine.volume < 0.01f) m_Engine.Stop();
             m_Engine.pitch = Mathf.Lerp(0.75f, 1.9f, speed01);
-            m_Engine.volume = Mathf.MoveTowards(m_Engine.volume, sfx * Mathf.Lerp(0.55f, 1f, speed01), Time.unscaledDeltaTime * 2f);
+            m_Engine.volume = Mathf.MoveTowards(m_Engine.volume, sfx * Mathf.Lerp(0.7f, 1f, speed01), Time.unscaledDeltaTime * 2f);
 
             float rumble = on && offroad ? m_Settings.sfxVolume * 0.5f : 0f;
             if (rumble > 0f && !m_Rumble.isPlaying && m_Rumble.clip != null) m_Rumble.Play();

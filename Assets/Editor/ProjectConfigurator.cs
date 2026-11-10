@@ -13,8 +13,8 @@ namespace TurboRush.EditorTools
     /// </summary>
     public static class ProjectConfigurator
     {
-        public const string AppVersion = "0.3.1";
-        public const int AppVersionCode = 4;
+        public const string AppVersion = "0.3.2";
+        public const int AppVersionCode = 5;
         public const string ApplicationId = "com.studio.turborush3d";
         public const string ProductName = "Turbo Rush 3D";
         public const string CompanyName = "Nocvault";
