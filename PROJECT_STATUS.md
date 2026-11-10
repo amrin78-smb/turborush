@@ -1,6 +1,6 @@
 # Turbo Rush 3D: project status
 
-_Last updated: 2026-11-10. Version 0.3.0 (versionCode 3): M7 proper 3D car models. Earlier: 0.2.0 (M9), 0.1.0 (RC)._
+_Last updated: 2026-11-10. Version 0.3.1 (versionCode 4): app icon and splash logo. 0.3.0: M7 proper 3D car models. Earlier: 0.2.0 (M9), 0.1.0 (RC)._
 
 Owner feedback 2026-11-10: "It plays well" (informal; the Redmi A3 checklist below has not been filled in yet).
 

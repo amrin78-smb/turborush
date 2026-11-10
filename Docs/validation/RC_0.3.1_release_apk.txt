@@ -1,0 +1,14 @@
+APK: Builds/Android/TurboRush3D.apk  (2026-11-10 10:11:45)
+Size: 51.8 MB
+  aapt> package: name='com.studio.turborush3d' versionCode='4' versionName='0.3.1' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'
+  aapt> sdkVersion:'25'
+  aapt> targetSdkVersion:'36'
+  aapt> uses-permission: name='android.permission.VIBRATE'
+  aapt> native-code: 'arm64-v8a' 'armeabi-v7a'
+Command: /home/amrin/Unity/Hub/Editor/6000.3.27f2/Editor/Data/PlaybackEngines/AndroidPlayer/SDK/build-tools/36.0.0/aapt dump badging <apk> | grep native-code
+OK   native-code lists arm64-v8a AND armeabi-v7a
+OK   no INTERNET permission
+OK   landscape orientation (A: android:screenOrientation(0x0101001e)=(type 0x10)0xb)
+Scanned 237 files under assets/bin/Data/ for ".*PowerVR.*"
+OK   PowerVR Vulkan deny filter found in: assets/bin/Data/globalgamemanagers.assets.split11
+RESULT: PASS

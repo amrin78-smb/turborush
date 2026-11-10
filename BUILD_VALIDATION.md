@@ -51,6 +51,13 @@ Screenshots: `Docs/screenshots/` (contact sheet: `layout_contact_sheet.png`).
 **Pending physical-device validation.** No device was attached to the build machine.
 Second-launch regression, FPS, thermals, selected graphics API: follow `Docs/REDMI_A3_TEST_CHECKLIST.md` and record the results here.
 
+## 0.3.1 (versionCode 4): app icon and splash, release APK, 2026-11-10
+Same checks as 0.3.0, all **PASS** (`Docs/validation/RC_0.3.1_release_apk.txt`): both ABIs, PowerVR filter, landscape, no INTERNET.
+Size 54,307,889 bytes · SHA-256 `88cfb1853fd52da408a7d761c272cc9d3484a562e098a0b52dd940eef1cc8228`. The APK's launcher icon is an adaptive icon XML; the packaged 432 px background,
+432 px transparent foreground and 192 px legacy PNGs were extracted from the APK and checked visually (new car icon, not Unity's).
+Tests were not re-run: only editor tooling and Player settings changed (no runtime code).
+How the icon and splash look on the Redmi A3 launcher: **Pending physical-device validation**.
+
 ## 0.3.0 (versionCode 3), M7: release APK, 2026-11-10
 Built with `Tools/build_android.sh release` (3 min 36 s). Evidence: `Docs/validation/RC_0.3.0_release_apk.txt`.
 

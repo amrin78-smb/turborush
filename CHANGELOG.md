@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.1 (versionCode 4) — 2026-11-10: app icon and splash logo
+- **Launcher icon**: Blaze rendered in-engine (front 3/4, friendly headlight "eyes") on a bright blue background with speed lines.
+  Android adaptive icon (background + transparent foreground inside the safe zone), round and legacy icons (`AppIconBuilder`).
+- **Splash screen**: the game logo (Blaze + "TURBO RUSH 3D" in the menu font and colours) on the game blue, then Unity's logo.
+- `Tools/setup.sh` builds both in a separate Unity run after setup and fails if a render comes out empty.
+  Previews: `Docs/screenshots/app_icon.png`, `Docs/screenshots/splash_preview.png`.
+
 ## 0.3.0 (versionCode 3) — 2026-11-10, M7: proper 3D car models
 - **8 new original car models** made in Blender 5.2 (`Art/Cars/`): Blaze, Zoom, Sunny and Mint by Kimi from the art-brief prompts;
   Grape (buggy), Tango (rally hatch), Frost (concept car) and Bolt (hyper-racer) built by script (`Tools/Blender/carkit.py`, `car_*.py`).
